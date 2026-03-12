@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>블랙리스트 이후 — 홈페이지 설계 서베이</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@400;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --black: #0a0a0a;
+    --white: #f5f5f0;
+    --lime: #c8ff00;
+    --red: #ff2d2d;
+    --gray: #888;
+  }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Noto Sans KR', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* 커버 */
+  .cover {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 40px 24px;
+    position: relative;
+    border-bottom: 4px solid var(--lime);
+  }
+
+  .cover-eyebrow {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 4px;
+    color: var(--lime);
+    margin-bottom: 24px;
+  }
+
+  .cover-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 14vw, 120px);
+    line-height: 0.92;
+    letter-spacing: -1px;
+    margin-bottom: 32px;
+  }
+
+  .cover-title em {
+    color: var(--lime);
+    font-style: normal;
+    display: block;
+  }
+
+  .cover-desc {
+    font-size: 15px;
+    line-height: 1.8;
+    color: #ccc;
+    max-width: 480px;
+    margin-bottom: 40px;
+  }
+
+  .cover-desc strong {
+    color: var(--white);
+  }
+
+  .cover-tag {
+    display: inline-block;
+    background: var(--lime);
+    color: var(--black);
+    font-weight: 900;
+    font-size: 13px;
+    padding: 8px 16px;
+    letter-spacing: 2px;
+  }
+
+  /* 섹션 공통 */
+  .section {
+    padding: 64px 24px;
+    border-bottom: 1px solid #222;
+  }
+
+  .section-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 80px;
+    color: #1a1a1a;
+    line-height: 1;
+    margin-bottom: -16px;
+  }
+
+  .section-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 4px;
+    color: var(--lime);
+    margin-bottom: 8px;
+  }
+
+  .section-q {
+    font-size: clamp(22px, 5vw, 32px);
+    font-weight: 900;
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+
+  .section-sub {
+    font-size: 14px;
+    color: var(--gray);
+    margin-bottom: 32px;
+    line-height: 1.6;
+  }
+
+  /* 카드 선택형 */
+  .cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .card {
+    border: 2px solid #2a2a2a;
+    padding: 20px 16px;
+    cursor: pointer;
+    transition: all 0.15s;
+    position: relative;
+  }
+
+  .card:hover, .card.selected {
+    border-color: var(--lime);
+    background: #111;
+  }
+
+  .card.selected::after {
+    content: '✓';
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    color: var(--lime);
+    font-weight: 900;
+    font-size: 16px;
+  }
+
+  .card-icon {
+    font-size: 28px;
+    margin-bottom: 10px;
+  }
+
+  .card-title {
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 4px;
+  }
+
+  .card-desc {
+    font-size: 12px;
+    color: var(--gray);
+    line-height: 1.5;
+  }
+
+  /* 슬라이더 */
+  .slider-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--gray);
+    margin-bottom: 8px;
+  }
+
+  input[type=range] {
+    width: 100%;
+    -webkit-appearance: none;
+    height: 4px;
+    background: #2a2a2a;
+    outline: none;
+    margin-bottom: 8px;
+  }
+
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background: var(--lime);
+    cursor: pointer;
+    border-radius: 0;
+  }
+
+  .slider-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    color: var(--lime);
+    text-align: center;
+  }
+
+  /* 텍스트 입력 */
+  textarea {
+    width: 100%;
+    background: #111;
+    border: 2px solid #2a2a2a;
+    color: var(--white);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 15px;
+    padding: 16px;
+    resize: vertical;
+    min-height: 100px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  textarea:focus {
+    border-color: var(--lime);
+  }
+
+  textarea::placeholder {
+    color: #444;
+  }
+
+  /* 순위 드래그 */
+  .rank-list {
+    list-style: none;
+  }
+
+  .rank-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    border: 2px solid #2a2a2a;
+    margin-bottom: 8px;
+    cursor: grab;
+    transition: border-color 0.15s;
+    user-select: none;
+  }
+
+  .rank-item:hover {
+    border-color: #444;
+  }
+
+  .rank-item.dragging {
+    border-color: var(--lime);
+    background: #111;
+    opacity: 0.8;
+  }
+
+  .rank-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    color: var(--lime);
+    min-width: 32px;
+  }
+
+  .rank-text {
+    font-size: 14px;
+    line-height: 1.4;
+    flex: 1;
+  }
+
+  .drag-hint {
+    font-size: 11px;
+    color: #555;
+    text-align: right;
+    margin-bottom: 12px;
+  }
+
+  /* 토글 선택 */
+  .toggles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .toggle {
+    border: 2px solid #2a2a2a;
+    padding: 10px 18px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-weight: 700;
+  }
+
+  .toggle:hover, .toggle.on {
+    background: var(--lime);
+    color: var(--black);
+    border-color: var(--lime);
+  }
+
+  /* 제출 섹션 */
+  .submit-section {
+    padding: 64px 24px 80px;
+    text-align: center;
+  }
+
+  .submit-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 10vw, 72px);
+    margin-bottom: 16px;
+  }
+
+  .submit-title span {
+    color: var(--lime);
+  }
+
+  .submit-desc {
+    color: var(--gray);
+    font-size: 14px;
+    margin-bottom: 40px;
+    line-height: 1.8;
+  }
+
+  .name-input {
+    width: 100%;
+    max-width: 320px;
+    background: #111;
+    border: 2px solid #2a2a2a;
+    color: var(--white);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 16px;
+    padding: 16px 20px;
+    outline: none;
+    display: block;
+    margin: 0 auto 16px;
+    text-align: center;
+    transition: border-color 0.15s;
+  }
+
+  .name-input:focus {
+    border-color: var(--lime);
+  }
+
+  .submit-btn {
+    background: var(--lime);
+    color: var(--black);
+    border: none;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 3px;
+    padding: 18px 48px;
+    cursor: pointer;
+    transition: all 0.15s;
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .submit-btn:hover {
+    background: var(--white);
+  }
+
+  /* 감사 화면 */
+  .thanks {
+    display: none;
+    min-height: 60vh;
+    padding: 64px 24px;
+    text-align: center;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .thanks.show {
+    display: flex;
+  }
+
+  .thanks-big {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 14vw, 100px);
+    line-height: 1;
+    margin-bottom: 24px;
+  }
+
+  .thanks-big span { color: var(--lime); }
+
+  .thanks-msg {
+    color: var(--gray);
+    font-size: 15px;
+    line-height: 1.8;
+    max-width: 320px;
+  }
+
+  /* 구분선 장식 */
+  .divider {
+    height: 2px;
+    background: linear-gradient(to right, var(--lime), transparent);
+    margin: 0 24px;
+  }
+
+  /* progress bar */
+  .progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: var(--lime);
+    transition: width 0.3s;
+    z-index: 100;
+  }
+
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<!-- 커버 -->
+<div class="cover">
+  <div class="cover-eyebrow">POST BLACKLIST · 홈페이지 기획 서베이 · 2026</div>
+  <h1 class="cover-title">
+    우리의<br>
+    <em>플레이어는</em><br>
+    누구인가
+  </h1>
+  <p class="cover-desc">
+    4월 25일 후원파티와 함께 문을 여는 홈페이지.<br>
+    실행위원 여러분의 생각이 <strong>설계의 첫 번째 재료</strong>입니다.<br><br>
+    5분이면 됩니다.
+  </p>
+  <div>
+    <span class="cover-tag">▼ 시작</span>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- Q1 -->
+<div class="section" id="q1">
+  <div class="section-num">01</div>
+  <div class="section-label">LINEUP · 방문자</div>
+  <h2 class="section-q">이 홈페이지에 오는 사람,<br>누가 가장 많을까요?</h2>
+  <p class="section-sub">가장 핵심적인 방문자를 2개까지 선택해주세요.</p>
+
+  <div class="cards">
+    <div class="card" onclick="toggleCard(this)">
+      <div class="card-icon">🎭</div>
+      <div class="card-title">피해 예술인 본인</div>
+      <div class="card-desc">블랙리스트 당사자, 동료 예술인</div>
+    </div>
+    <div class="card" onclick="toggleCard(this)">
+      <div class="card-icon">🤝</div>
+      <div class="card-title">지지자·연대자</div>
+      <div class="card-desc">함께 싸워온 시민, 활동가</div>
+    </div>
+    <div class="card" onclick="toggleCard(this)">
+      <div class="card-icon">💰</div>
+      <div class="card-title">후원자·기부자</div>
+      <div class="card-desc">재정적으로 응원하고 싶은 사람</div>
+    </div>
+    <div class="card" onclick="toggleCard(this)">
+      <div class="card-icon">📰</div>
+      <div class="card-title">언론·연구자</div>
+      <div class="card-desc">기록과 자료를 찾는 사람</div>
+    </div>
+    <div class="card" onclick="toggleCard(this)">
+      <div class="card-icon">🏛️</div>
+      <div class="card-title">정책·입법 관계자</div>
+      <div class="card-desc">제도 개선을 고민하는 사람</div>
+    </div>
+    <div class="card" onclick="toggleCard(this)">
+      <div class="card-icon">🔍</div>
+      <div class="card-title">처음 알게 된 시민</div>
+      <div class="card-desc">블랙리스트를 잘 모르는 사람</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- Q2 -->
+<div class="section" id="q2">
+  <div class="section-num">02</div>
+  <div class="section-label">FIRST TOUCH · 첫인상</div>
+  <h2 class="section-q">처음 들어온 사람이<br>5초 안에 알아야 할 것은?</h2>
+  <p class="section-sub">가장 중요한 것 1개만 선택해주세요.</p>
+
+  <div class="cards" style="grid-template-columns: 1fr;">
+    <div class="card" onclick="selectOne(this, 'q2')">
+      <div class="card-title">여기가 어떤 조직인지</div>
+      <div class="card-desc">"블랙리스트 이후"의 정체성과 역할</div>
+    </div>
+    <div class="card" onclick="selectOne(this, 'q2')">
+      <div class="card-title">지금 무슨 일을 하고 있는지</div>
+      <div class="card-desc">현재 진행 중인 활동·캠페인</div>
+    </div>
+    <div class="card" onclick="selectOne(this, 'q2')">
+      <div class="card-title">어떻게 참여·후원할 수 있는지</div>
+      <div class="card-desc">행동할 수 있는 방법</div>
+    </div>
+    <div class="card" onclick="selectOne(this, 'q2')">
+      <div class="card-title">블랙리스트가 아직 끝나지 않았다는 것</div>
+      <div class="card-desc">현재진행형의 문제임을 알리기</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- Q3 -->
+<div class="section" id="q3">
+  <div class="section-num">03</div>
+  <div class="section-label">GAME PLAN · 페이지 구성</div>
+  <h2 class="section-q">반드시 있어야 할 페이지를<br>순서대로 끌어서 정렬해주세요</h2>
+  <p class="section-sub">위쪽 = 더 중요. 드래그로 순위를 조정하세요.</p>
+
+  <div class="drag-hint">☰ 드래그해서 순위 변경</div>
+  <ul class="rank-list" id="rankList">
+    <li class="rank-item" draggable="true">
+      <span class="rank-num">1</span>
+      <div class="rank-text"><strong>소개</strong> — 우리가 누구인지</div>
+    </li>
+    <li class="rank-item" draggable="true">
+      <span class="rank-num">2</span>
+      <div class="rank-text"><strong>활동</strong> — 지금 하고 있는 일</div>
+    </li>
+    <li class="rank-item" draggable="true">
+      <span class="rank-num">3</span>
+      <div class="rank-text"><strong>피해자 기록</strong> — 누가, 어떻게 피해를 입었나</div>
+    </li>
+    <li class="rank-item" draggable="true">
+      <span class="rank-num">4</span>
+      <div class="rank-text"><strong>후원</strong> — 재정 지원하기</div>
+    </li>
+    <li class="rank-item" draggable="true">
+      <span class="rank-num">5</span>
+      <div class="rank-text"><strong>후원파티</strong> — 4월 25일 행사</div>
+    </li>
+    <li class="rank-item" draggable="true">
+      <span class="rank-num">6</span>
+      <div class="rank-text"><strong>뉴스·자료</strong> — 기사, 문서, 성명</div>
+    </li>
+    <li class="rank-item" draggable="true">
+      <span class="rank-num">7</span>
+      <div class="rank-text"><strong>예술인 작품·소식</strong> — 멤버들의 활동</div>
+    </li>
+  </ul>
+</div>
+
+<div class="divider"></div>
+
+<!-- Q4 -->
+<div class="section" id="q4">
+  <div class="section-num">04</div>
+  <div class="section-label">TEMPO · 분위기</div>
+  <h2 class="section-q">홈페이지의 분위기를<br>숫자로 표현한다면?</h2>
+  <p class="section-sub">1 = 무겁고 기록적 / 10 = 가볍고 역동적</p>
+
+  <div class="slider-labels">
+    <span>묵직한 아카이브</span>
+    <span>살아있는 운동</span>
+  </div>
+  <input type="range" min="1" max="10" value="7" id="mood" oninput="updateSlider('mood', 'moodVal')">
+  <div class="slider-value" id="moodVal">7</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- Q5 -->
+<div class="section" id="q5">
+  <div class="section-num">05</div>
+  <div class="section-label">EXIT · 나갈 때</div>
+  <h2 class="section-q">방문자가 홈페이지를 나갈 때<br>꼭 가져가야 할 것은?</h2>
+  <p class="section-sub">여러 개 선택 가능.</p>
+
+  <div class="toggles" id="exitToggles">
+    <div class="toggle" onclick="this.classList.toggle('on')">연대감</div>
+    <div class="toggle" onclick="this.classList.toggle('on')">행동할 방법</div>
+    <div class="toggle" onclick="this.classList.toggle('on')">분노</div>
+    <div class="toggle" onclick="this.classList.toggle('on')">희망</div>
+    <div class="toggle" onclick="this.classList.toggle('on')">사실과 기록</div>
+    <div class="toggle" onclick="this.classList.toggle('on')">다음에 또 오고 싶다는 생각</div>
+    <div class="toggle" onclick="this.classList.toggle('on')">후원 버튼을 눌렀다는 만족감</div>
+    <div class="toggle" onclick="this.classList.toggle('on')">티켓을 샀다</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- Q6 -->
+<div class="section" id="q6">
+  <div class="section-num">06</div>
+  <div class="section-label">WILDCARD · 한마디</div>
+  <h2 class="section-q">4/25 후원파티 전까지<br>홈페이지에서 딱 하나만 된다면?</h2>
+  <p class="section-sub">자유롭게 써주세요. 짧아도 됩니다.</p>
+
+  <textarea id="freeText" placeholder="예: 후원 버튼이 바로 눈에 띄어야 한다 / 우리가 뭘 하는 사람들인지 영상 하나로 설명해야 한다 ..."></textarea>
+</div>
+
+<div class="divider"></div>
+
+<!-- 제출 -->
+<div class="submit-section" id="submitArea">
+  <div class="submit-title">PLAY<br><span>BALL</span></div>
+  <p class="submit-desc">이름을 남겨주시면<br>누가 어떻게 생각하는지 더 잘 반영할 수 있어요.</p>
+  <input class="name-input" type="text" id="nameInput" placeholder="이름 (선택)">
+  <button class="submit-btn" onclick="submitForm()">제출하기 →</button>
+</div>
+
+<!-- 감사 -->
+<div class="thanks" id="thanks">
+  <div class="thanks-big">GAME<br><span>ON!</span></div>
+  <p class="thanks-msg">
+    응답이 기록되었습니다.<br>
+    여러분의 생각이<br>
+    홈페이지 첫 번째 설계가 됩니다.<br><br>
+    <strong>4월 25일에 봐요.</strong>
+  </p>
+</div>
+
+<script>
+  // 프로그레스 바
+  window.addEventListener('scroll', () => {
+    const docH = document.body.scrollHeight - window.innerHeight;
+    const scrolled = window.scrollY / docH * 100;
+    document.getElementById('progress').style.width = scrolled + '%';
+  });
+
+  // 다중 선택 카드
+  function toggleCard(el) {
+    el.classList.toggle('selected');
+  }
+
+  // 단일 선택 카드
+  function selectOne(el, group) {
+    const section = document.getElementById(group);
+    section.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  // 슬라이더
+  function updateSlider(id, valId) {
+    document.getElementById(valId).textContent = document.getElementById(id).value;
+  }
+
+  // 드래그 순위
+  const rankList = document.getElementById('rankList');
+  let dragging = null;
+
+  rankList.addEventListener('dragstart', e => {
+    dragging = e.target.closest('.rank-item');
+    dragging.classList.add('dragging');
+  });
+
+  rankList.addEventListener('dragend', e => {
+    dragging.classList.remove('dragging');
+    updateRankNums();
+  });
+
+  rankList.addEventListener('dragover', e => {
+    e.preventDefault();
+    const afterEl = getDragAfterEl(rankList, e.clientY);
+    if (afterEl == null) rankList.appendChild(dragging);
+    else rankList.insertBefore(dragging, afterEl);
+  });
+
+  function getDragAfterEl(container, y) {
+    const items = [...container.querySelectorAll('.rank-item:not(.dragging)')];
+    return items.reduce((closest, child) => {
+      const box = child.getBoundingClientRect();
+      const offset = y - box.top - box.height / 2;
+      if (offset < 0 && offset > closest.offset) return { offset, element: child };
+      return closest;
+    }, { offset: Number.NEGATIVE_INFINITY }).element;
+  }
+
+  function updateRankNums() {
+    rankList.querySelectorAll('.rank-item').forEach((item, i) => {
+      item.querySelector('.rank-num').textContent = i + 1;
+    });
+  }
+
+  // 제출
+  function submitForm() {
+    // 응답 수집
+    const q1 = [...document.querySelectorAll('#q1 .card.selected')].map(c => c.querySelector('.card-title').textContent);
+    const q2 = [...document.querySelectorAll('#q2 .card.selected')].map(c => c.querySelector('.card-title').textContent);
+    const q3 = [...document.querySelectorAll('#rankList .rank-item')].map(li => li.querySelector('.rank-text strong').textContent);
+    const q4 = document.getElementById('mood').value;
+    const q5 = [...document.querySelectorAll('#exitToggles .toggle.on')].map(t => t.textContent);
+    const q6 = document.getElementById('freeText').value;
+    const name = document.getElementById('nameInput').value || '익명';
+
+    // 구글 폼으로 보내는 대신 콘솔 출력 (실제 연동 시 fetch로 교체)
+    const result = { name, q1, q2, q3, q4, q5, q6 };
+    console.log('응답:', JSON.stringify(result, null, 2));
+
+    // 감사 화면
+    document.getElementById('submitArea').style.display = 'none';
+    const thanks = document.getElementById('thanks');
+    thanks.classList.add('show');
+    thanks.scrollIntoView({ behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
