@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>블랙리스트 이후 — POST BLACKLIST</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700;900&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; font-size:16px; }
+body { font-family:'Pretendard', sans-serif; background:#F5F0E8; color:#1C1C1C; overflow-x:hidden; }
+
+/* ── TOKENS ── */
+:root {
+  --paper:  #F5F0E8;   /* 따뜻한 종이 */
+  --white:  #FDFAF5;   /* 아이보리 화이트 */
+  --ink:    #1C1C1C;
+  --sage:   #4E876A;   /* 봄 초록 */
+  --gold:   #C8962A;   /* 따뜻한 골드 */
+  --rose:   #C47B72;   /* 더스티 로즈 */
+  --sky:    #7BA8C4;   /* 봄 하늘 */
+  --lav:    #8B80B8;   /* 라벤더 */
+  --muted:  rgba(28,28,28,0.45);
+}
+
+/* ── GRAIN ── */
+body::after {
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:999;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  mix-blend-mode:multiply; opacity:0.6;
+}
+
+/* ── SIZE ── */
+.size-ctrl { position:fixed; bottom:24px; right:24px; z-index:500; display:flex; flex-direction:column; gap:6px; }
+.size-btn { width:44px; height:44px; border-radius:50%; background:var(--white); border:1.5px solid rgba(0,0,0,0.12); cursor:pointer; font-size:13px; font-weight:900; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 12px rgba(0,0,0,0.07); font-family:'Space Grotesk', sans-serif; transition:background 0.15s; }
+.size-btn:hover { background:#ede7da; }
+
+/* ── NAV ── */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:300;
+  padding:20px 60px;
+  display:flex; justify-content:space-between; align-items:center;
+  transition:all 0.35s;
+}
+nav.on {
+  background:rgba(245,240,232,0.95);
+  backdrop-filter:blur(20px);
+  padding:13px 60px;
+  border-bottom:1px solid rgba(0,0,0,0.07);
+}
+.nav-logo { font-family:'DM Serif Display', serif; font-size:18px; color:var(--ink); letter-spacing:0.01em; }
+.nav-links { list-style:none; display:flex; gap:32px; align-items:center; }
+.nav-links a { font-family:'Space Grotesk', sans-serif; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); text-decoration:none; transition:color 0.2s; }
+.nav-links a:hover { color:var(--sage); }
+.nav-cta { background:var(--sage) !important; color:white !important; padding:10px 22px; font-weight:700 !important; border-radius:2px; }
+.nav-cta:hover { opacity:0.82 !important; color:white !important; }
+
+/* ── HERO — 봄처럼 밝게 ── */
+.hero {
+  min-height:100vh;
+  background:var(--paper);
+  display:grid;
+  grid-template-rows:1fr auto;
+  padding-top:80px;
+  position:relative; overflow:hidden;
+}
+
+/* 배경 — 흐릿한 텍스처, 밝은 것들 */
+.hero-bg-text {
+  position:absolute; inset:0; pointer-events:none;
+  display:flex; flex-wrap:wrap; align-content:center;
+  padding:80px 60px; gap:12px 32px;
+  opacity:0.06;
+}
+.hero-bg-text span {
+  font-family:'DM Serif Display', serif;
+  font-size:clamp(14px, 1.5vw, 18px);
+  color:var(--ink); font-style:italic;
+  opacity:0; animation:fadeIn 3s ease forwards;
+}
+@keyframes fadeIn { to{opacity:1} }
+
+/* 큰 "이후" */
+.hero-main-area {
+  display:flex; flex-direction:column;
+  justify-content:center; padding:0 60px;
+  position:relative; z-index:2;
+}
+.hero-kicker {
+  font-family:'Space Grotesk', sans-serif;
+  font-size:10px; letter-spacing:0.7em; text-transform:uppercase;
+  color:var(--sage); font-weight:700;
+  display:flex; align-items:center; gap:12px;
+  margin-bottom:16px;
+  opacity:0; animation:up 0.7s 0.2s forwards;
+}
+.hero-kicker::before { content:''; width:24px; height:1.5px; background:var(--sage); }
+
+.hero-word {
+  position:relative;
+  margin-bottom:8px;
+}
+/* "이후" — 밝고 크고 따뜻하게 */
+.hw-main {
+  display:block;
+  font-family:'DM Serif Display', serif;
+  font-size:clamp(120px, 22vw, 300px);
+  line-height:0.82; letter-spacing:-0.04em;
+  color:var(--ink);
+  opacity:0; animation:slideUp 1.2s cubic-bezier(0.16,1,0.3,1) 0.4s forwards;
+}
+/* 컬러 포인트 — 봄 */
+.hw-main .c-sage { color:var(--sage); }
+
+/* "블랙리스트" — 작게, 배경처럼 */
+.hw-sub {
+  position:absolute; bottom:8px; right:0;
+  font-family:'Space Grotesk', sans-serif;
+  font-size:clamp(10px, 1.2vw, 14px);
+  letter-spacing:0.5em; text-transform:uppercase;
+  color:rgba(28,28,28,0.18);
+  opacity:0; animation:up 0.8s 1.2s forwards;
+}
+
+.hero-desc-area {
+  padding:40px 60px 72px;
+  display:flex; justify-content:space-between; align-items:flex-end;
+  position:relative; z-index:2; flex-wrap:wrap; gap:24px;
+}
+.hero-desc {
+  font-size:clamp(15px, 1.7vw, 17px); line-height:2.1;
+  color:rgba(28,28,28,0.6); max-width:380px;
+  opacity:0; animation:up 0.8s 1s forwards;
+}
+.hero-btns {
+  display:flex; gap:12px; flex-wrap:wrap;
+  opacity:0; animation:up 0.8s 1.2s forwards;
+}
+.btn-sage { background:var(--sage); color:white; padding:16px 44px; font-family:'Space Grotesk', sans-serif; font-size:12px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; text-decoration:none; display:inline-block; transition:opacity 0.2s, transform 0.15s; }
+.btn-sage:hover { opacity:0.82; transform:translateY(-2px); }
+.btn-out { background:transparent; color:var(--ink); padding:15px 44px; font-family:'Space Grotesk', sans-serif; font-size:12px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; text-decoration:none; display:inline-block; border:1.5px solid rgba(28,28,28,0.25); transition:all 0.2s; }
+.btn-out:hover { border-color:var(--sage); color:var(--sage); transform:translateY(-2px); }
+
+@keyframes slideUp { from{opacity:0;transform:translateY(50px)} to{opacity:1;transform:none} }
+@keyframes up { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
+
+/* ── MARQUEE — SAGE ── */
+.mq { background:var(--sage); padding:12px 0; overflow:hidden; white-space:nowrap; }
+.mq-track { display:inline-flex; animation:scroll 22s linear infinite; }
+.mq-track span { font-family:'Space Grotesk', sans-serif; font-size:11px; letter-spacing:0.4em; text-transform:uppercase; color:rgba(255,255,255,0.85); font-weight:700; padding:0 28px; }
+.mq-track em { color:rgba(255,255,255,0.4); font-style:normal; padding:0 4px; }
+@keyframes scroll { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+/* ── SECTIONS ── */
+.sec { padding:120px 80px; }
+.sec-lbl { font-family:'Space Grotesk', sans-serif; font-size:10px; letter-spacing:0.55em; text-transform:uppercase; font-weight:700; display:flex; align-items:center; gap:14px; margin-bottom:52px; }
+.sec-lbl::before { content:''; width:20px; height:1.5px; }
+.lbl-sage { color:var(--sage); } .lbl-sage::before { background:var(--sage); }
+.lbl-gold { color:var(--gold); } .lbl-gold::before { background:var(--gold); }
+.lbl-rose { color:var(--rose); } .lbl-rose::before { background:var(--rose); }
+.lbl-w { color:rgba(255,255,255,0.6); } .lbl-w::before { background:rgba(255,255,255,0.4); }
+
+/* ── ABOUT — 따뜻한 배경 ── */
+.about-sec { background:var(--white); }
+
+.bento {
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:14px;
+}
+/* 타이틀 */
+.b-big {
+  grid-column:1/3; grid-row:1;
+  background:var(--paper); border:1.5px solid rgba(0,0,0,0.07);
+  padding:52px 56px; position:relative; overflow:hidden;
+}
+.b-big h2 { font-family:'DM Serif Display', serif; font-size:clamp(40px, 5vw, 62px); line-height:1.05; letter-spacing:-0.02em; }
+.b-big h2 em { color:var(--sage); font-style:italic; }
+.b-big-bg { position:absolute; right:-10px; bottom:-36px; font-family:'DM Serif Display', serif; font-size:180px; color:rgba(0,0,0,0.03); pointer-events:none; font-style:italic; }
+
+/* 설명 */
+.b-txt {
+  grid-column:3; grid-row:1;
+  background:var(--sage); color:white; padding:44px 40px;
+  display:flex; flex-direction:column; justify-content:center;
+}
+.b-txt p { font-size:15px; line-height:2.1; opacity:0.9; }
+
+/* 미션들 */
+.b-m {
+  background:var(--paper); border:1.5px solid rgba(0,0,0,0.06);
+  padding:32px 36px; cursor:default;
+  transition:background 0.2s, transform 0.2s;
+}
+.b-m:hover { background:#EDE7D9; transform:translateY(-3px); }
+.bm-n { font-family:'Space Grotesk', sans-serif; font-size:10px; font-weight:700; letter-spacing:0.3em; color:var(--sage); margin-bottom:12px; }
+.bm-t { font-size:15px; line-height:1.75; font-weight:600; }
+
+/* 스탯들 */
+.b-st { padding:36px 32px; display:flex; flex-direction:column; justify-content:flex-end; border:1.5px solid rgba(0,0,0,0.06); }
+.b-st.gold { background:var(--gold); border-color:transparent; }
+.b-st.rose { background:var(--rose); border-color:transparent; }
+.b-st.sky  { background:var(--sky);  border-color:transparent; }
+.bsn { font-family:'Pretendard', sans-serif; font-weight:900; font-size:clamp(44px, 5vw,64px); line-height:0.9; letter-spacing:-0.04em; color:white; margin-bottom:10px; }
+.b-st.gold .bsn, .b-st.rose .bsn, .b-st.sky .bsn { color:rgba(255,255,255,0.95); }
+.bsl { font-size:13px; color:rgba(255,255,255,0.75); line-height:1.7; }
+
+/* ── TIMELINE ── */
+.tl-sec { background:var(--paper); }
+.tl-list { max-width:800px; }
+.tl-row { display:grid; grid-template-columns:96px 1fr; gap:44px; padding:28px 0; border-bottom:1px dashed rgba(0,0,0,0.1); align-items:start; }
+.tl-yr { font-family:'DM Serif Display', serif; font-size:19px; color:var(--rose); padding-top:2px; font-style:italic; }
+.tl-tag { display:inline-block; font-family:'Space Grotesk', sans-serif; font-size:9px; font-weight:700; letter-spacing:0.3em; text-transform:uppercase; padding:4px 10px; margin-bottom:10px; transform:rotate(-1deg); display:inline-block; }
+.tag-gold { background:var(--gold); color:white; }
+.tag-sage { background:var(--sage); color:white; transform:rotate(0.8deg); }
+.tag-rose { background:var(--rose); color:white; transform:rotate(-1.5deg); }
+.tl-h { font-size:17px; font-weight:700; margin-bottom:6px; line-height:1.35; }
+.tl-p { font-size:15px; color:var(--muted); line-height:1.9; }
+
+/* ── SUPPORT — 세이지 배경, 밝게 ── */
+.sup-sec { background:var(--sage); color:white; text-align:center; }
+.sup-kicker { font-family:'Space Grotesk', sans-serif; font-size:10px; letter-spacing:0.6em; text-transform:uppercase; color:rgba(255,255,255,0.65); font-weight:700; display:flex; align-items:center; justify-content:center; gap:16px; margin-bottom:52px; }
+.sup-kicker::before, .sup-kicker::after { content:''; width:28px; height:1px; background:rgba(255,255,255,0.4); }
+.sup-title { font-family:'DM Serif Display', serif; font-size:clamp(40px, 6vw, 68px); line-height:1.05; letter-spacing:-0.02em; margin-bottom:18px; }
+.sup-title em { color:var(--gold); font-style:italic; }
+.sup-desc { font-size:17px; color:rgba(255,255,255,0.7); line-height:2.1; max-width:460px; margin:0 auto 52px; }
+.sup-cards { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-bottom:48px; }
+.sup-card { background:rgba(255,255,255,0.12); padding:36px 48px; text-align:left; min-width:200px; transition:background 0.2s; }
+.sup-card:hover { background:rgba(255,255,255,0.18); }
+.sct { font-family:'Space Grotesk', sans-serif; font-size:9px; letter-spacing:0.45em; text-transform:uppercase; color:rgba(255,255,255,0.6); font-weight:700; margin-bottom:14px; }
+.sch { font-size:22px; font-weight:700; color:white; margin-bottom:7px; }
+.scd { font-size:14px; color:rgba(255,255,255,0.5); line-height:1.8; }
+.btn-w { background:white; color:var(--sage); padding:17px 64px; font-family:'Space Grotesk', sans-serif; font-size:13px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; text-decoration:none; display:inline-block; transition:opacity 0.2s, transform 0.15s; }
+.btn-w:hover { opacity:0.88; transform:translateY(-2px); }
+
+/* ── PARTY — 골드 밝게 ── */
+.party-sec { background:var(--gold); }
+.party-grid { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; }
+.party-big { font-family:'DM Serif Display', serif; font-size:clamp(80px, 13vw, 180px); line-height:0.82; letter-spacing:-0.04em; color:rgba(255,255,255,0.2); margin-bottom:-12px; font-style:italic; }
+.party-title { font-family:'DM Serif Display', serif; font-size:clamp(30px, 4vw, 50px); line-height:1.1; color:white; margin-bottom:16px; }
+.party-desc { font-size:17px; color:rgba(255,255,255,0.75); line-height:2.1; }
+.party-info { display:flex; flex-direction:column; gap:24px; }
+.pi { display:flex; flex-direction:column; gap:4px; }
+.pi-l { font-family:'Space Grotesk', sans-serif; font-size:9px; letter-spacing:0.5em; text-transform:uppercase; color:rgba(255,255,255,0.55); font-weight:700; }
+.pi-v { font-size:20px; font-weight:700; color:white; }
+.btn-white-ink { background:white; color:var(--gold); padding:17px 48px; font-family:'Space Grotesk', sans-serif; font-size:12px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; text-decoration:none; display:inline-block; margin-top:8px; transition:opacity 0.2s, transform 0.15s; }
+.btn-white-ink:hover { opacity:0.88; transform:translateY(-2px); }
+
+/* ── FOOTER ── */
+footer { background:var(--ink); padding:56px 80px; display:flex; justify-content:space-between; align-items:flex-end; }
+.f-logo { font-family:'DM Serif Display', serif; font-size:22px; color:white; margin-bottom:6px; }
+.f-logo em { color:var(--sage); font-style:italic; }
+.f-sub { font-size:12px; color:rgba(255,255,255,0.28); font-family:'Space Grotesk', sans-serif; letter-spacing:0.05em; }
+.f-links { display:flex; gap:24px; }
+.f-links a { color:rgba(255,255,255,0.33); text-decoration:none; font-family:'Space Grotesk', sans-serif; font-size:12px; letter-spacing:0.07em; transition:color 0.2s; }
+.f-links a:hover { color:var(--sage); }
+.f-copy { font-family:'Space Grotesk', sans-serif; font-size:10px; color:rgba(255,255,255,0.18); text-align:right; letter-spacing:0.12em; }
+
+/* ── REVEAL ── */
+.rv { opacity:0; transform:translateY(20px); transition:opacity 0.75s cubic-bezier(0.16,1,0.3,1), transform 0.75s cubic-bezier(0.16,1,0.3,1); }
+.rv.on { opacity:1; transform:none; }
+.d1{transition-delay:.08s} .d2{transition-delay:.16s} .d3{transition-delay:.25s} .d4{transition-delay:.34s}
+
+/* ── MOBILE ── */
+@media(max-width:768px){
+  nav { padding:16px 20px; } nav.on { padding:12px 20px; }
+  .nav-links li:not(:last-child) { display:none; }
+  .hero-main-area { padding:0 24px; }
+  .hero-desc-area { padding:32px 24px 60px; flex-direction:column; align-items:flex-start; }
+  .btn-sage, .btn-out { width:100%; max-width:280px; text-align:center; padding:16px 24px; }
+  .hero-btns { flex-direction:column; }
+  .sec { padding:72px 24px; }
+  .bento { grid-template-columns:1fr; }
+  .b-big { grid-column:1; padding:40px 28px; }
+  .b-txt { grid-column:1; }
+  .tl-row { grid-template-columns:72px 1fr; gap:20px; padding:24px 0; }
+  .party-grid { grid-template-columns:1fr; gap:40px; }
+  footer { flex-direction:column; gap:28px; align-items:flex-start; padding:40px 24px; }
+  .f-copy { text-align:left; }
+  .size-ctrl { bottom:80px; right:16px; }
+}
+@media(min-width:769px) and (max-width:1024px){
+  .sec { padding:80px 48px; }
+  .bento { grid-template-columns:1fr 1fr; }
+  .b-big { grid-column:1/3; }
+  .b-txt { grid-column:1/3; }
+  .party-grid { grid-template-columns:1fr; gap:52px; }
+}
+</style>
+</head>
+<body>
+
+<div class="size-ctrl">
+  <button class="size-btn" onclick="fs(1)">A+</button>
+  <button class="size-btn" onclick="fs(-1)">A−</button>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo">블랙리스트 이후</div>
+  <ul class="nav-links">
+    <li><a href="#about">소개</a></li>
+    <li><a href="#timeline">활동</a></li>
+    <li><a href="#party">후원파티</a></li>
+    <li><a href="https://view.hyosungcms.co.kr/simple-agreement/payer-regist" target="_blank" class="nav-cta">후원하기</a></li>
+  </ul>
+</nav>
+
+<!-- HERO — 봄처럼 밝게 -->
+<section class="hero" id="hero">
+  <div class="hero-bg-text" id="bgText"></div>
+  <div class="hero-main-area">
+    <div class="hero-kicker">POST BLACKLIST · 2017 — NOW</div>
+    <div class="hero-word">
+      <span class="hw-main"><span class="c-sage">이</span>후</span>
+      <span class="hw-sub">BLACKLIST ↑</span>
+    </div>
+  </div>
+  <div class="hero-desc-area">
+    <p class="hero-desc">
+      9473명의 이름이 지워진 자리에서<br>
+      우리는 계속 만들어간다
+    </p>
+    <div class="hero-btns">
+      <a href="https://view.hyosungcms.co.kr/simple-agreement/payer-regist" target="_blank" class="btn-sage">후원하기</a>
+      <a href="#party" class="btn-out">후원파티 04.25 →</a>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="mq">
+  <div class="mq-track">
+    <span>끝까지 싸워라</span><em>·</em>
+    <span>사랑스럽고 다정하게</span><em>·</em>
+    <span>Fight to the end</span><em>·</em>
+    <span>Lovingly & Tenderly</span><em>·</em>
+    <span>이후를 만든다</span><em>·</em>
+    <span>POST BLACKLIST</span><em>·</em>
+    <span>끝까지 싸워라</span><em>·</em>
+    <span>사랑스럽고 다정하게</span><em>·</em>
+    <span>Fight to the end</span><em>·</em>
+    <span>Lovingly & Tenderly</span><em>·</em>
+    <span>이후를 만든다</span><em>·</em>
+    <span>POST BLACKLIST</span><em>·</em>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="about-sec sec" id="about">
+  <div class="sec-lbl lbl-sage rv">ABOUT</div>
+  <div class="bento">
+    <div class="b-big rv">
+      <h2>블랙리스트<br><em>이후</em>를<br>만든다</h2>
+      <div class="b-big-bg">이후</div>
+    </div>
+    <div class="b-txt rv d1">
+      <p>블랙리스트는 끝나지 않았습니다.<br>9473명의 예술인이 지워진 이후에도<br>새로운 형태의 검열은 계속됩니다.<br><br>블랙리스트 이후는 그 기록을 추적하고<br>제도를 바꾸고, 다시는 반복되지 않는<br>세상을 만들어가는 민간 전문 기구입니다.</p>
+    </div>
+    <div class="b-m rv d1">
+      <div class="bm-n">01</div>
+      <div class="bm-t">법·제도·정책 구조 개혁</div>
+    </div>
+    <div class="b-m rv d2">
+      <div class="bm-n">02</div>
+      <div class="bm-t">미결 진상조사 · 기록</div>
+    </div>
+    <div class="b-m rv d3">
+      <div class="bm-n">03</div>
+      <div class="bm-t">피해자 회복 · 연대</div>
+    </div>
+    <div class="b-st gold rv d1">
+      <div class="bsn" data-t="9473">0</div>
+      <div class="bsl">블랙리스트<br>피해 예술인</div>
+    </div>
+    <div class="b-st rose rv d2">
+      <div class="bsn" data-t="9">0</div>
+      <div class="bsl">년간<br>활동 추적</div>
+    </div>
+    <div class="b-st sky rv d3">
+      <div class="bsn" data-t="40">0</div>
+      <div class="bsl">건 이상<br>피해 대응</div>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section class="tl-sec sec" id="timeline">
+  <div class="sec-lbl lbl-rose rv">TIMELINE</div>
+  <div class="tl-list">
+    <div class="tl-row rv">
+      <div class="tl-yr">2017</div>
+      <div><div class="tl-tag tag-gold">발족</div><div class="tl-h">블랙리스트 이후 출범</div><div class="tl-p">문화예술계 블랙리스트 피해 예술인들의 대응·연대 조직. 9473명의 이름을 기억하는 것에서 시작.</div></div>
+    </div>
+    <div class="tl-row rv d1">
+      <div class="tl-yr">2018–20</div>
+      <div><div class="tl-tag tag-sage">대응</div><div class="tl-h">진상조사·법적 대응</div><div class="tl-p">피해 예술인 사례 수집 및 법적 지원. 가해자 복귀 현황 모니터링.</div></div>
+    </div>
+    <div class="tl-row rv d2">
+      <div class="tl-yr">2021–23</div>
+      <div><div class="tl-tag tag-gold">개혁</div><div class="tl-h">제도 개혁·입법 활동</div><div class="tl-p">예술인권리보장법 개정 추진. 재발 방지 시스템 마련 요구.</div></div>
+    </div>
+    <div class="tl-row rv d3">
+      <div class="tl-yr">2024–25</div>
+      <div><div class="tl-tag tag-sage">입법</div><div class="tl-h">예술인권리보장법 전면 개정</div><div class="tl-p">이재명 정부 법 전면 개정 추진 참여. 피해자 회복 지원 체계 논의.</div></div>
+    </div>
+    <div class="tl-row rv">
+      <div class="tl-yr">2026</div>
+      <div><div class="tl-tag tag-rose" style="background:var(--rose);">NOW</div><div class="tl-h">지금도, 이후에도</div><div class="tl-p">블랙리스트가 끝난 게 아니라, 이후를 만들어가는 중입니다.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SUPPORT -->
+<section class="sup-sec sec" id="support">
+  <div class="sup-kicker rv">SUPPORT</div>
+  <h2 class="sup-title rv d1">함께<em>이어서</em><br>계속됩니다</h2>
+  <p class="sup-desc rv d2">사랑스럽고 다정하게, 끝까지.<br>여러분의 후원으로 이어집니다.</p>
+  <div class="sup-cards rv d3">
+    <div class="sup-card">
+      <div class="sct">정기 후원</div>
+      <div class="sch">효성 CMS</div>
+      <div class="scd">매월 자동 결제<br>언제든 변경·해지 가능</div>
+    </div>
+    <div class="sup-card">
+      <div class="sct">일시 후원</div>
+      <div class="sch">계좌이체</div>
+      <div class="scd">준비 중<br>문의: 블랙리스트 이후</div>
+    </div>
+  </div>
+  <div class="rv d4">
+    <a href="https://view.hyosungcms.co.kr/simple-agreement/payer-regist" target="_blank" class="btn-w">지금 후원하기 →</a>
+  </div>
+</section>
+
+<!-- PARTY -->
+<section class="party-sec sec" id="party">
+  <div class="sec-lbl lbl-w rv">UPCOMING EVENT</div>
+  <div class="party-grid">
+    <div>
+      <div class="party-big rv">04·25</div>
+      <h3 class="party-title rv d1">블랙리스트 이후<br>후원 파티</h3>
+      <p class="party-desc rv d2">함께여서 계속됩니다.<br>모이고, 나누고, 이어가는 밤.</p>
+    </div>
+    <div class="party-info rv d2">
+      <div class="pi"><span class="pi-l">DATE</span><span class="pi-v">2026년 4월 25일 토요일</span></div>
+      <div class="pi"><span class="pi-l">LOCATION</span><span class="pi-v">추후 공개</span></div>
+      <div class="pi"><span class="pi-l">ORGANIZER</span><span class="pi-v">블랙리스트 이후</span></div>
+      <a href="https://view.hyosungcms.co.kr/simple-agreement/payer-regist" target="_blank" class="btn-white-ink">후원하고 함께하기 →</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="f-logo">블랙리스트<em>이후</em></div>
+    <div class="f-sub">표현의 자유를 위한 민간 전문 기구 · 2017 — NOW</div>
+  </div>
+  <div class="f-links">
+    <a href="https://www.instagram.com/post_blacklist" target="_blank">Instagram</a>
+    <a href="https://www.facebook.com/profile.php?id=100089032202148" target="_blank">Facebook</a>
+    <a href="https://view.hyosungcms.co.kr/simple-agreement/payer-regist" target="_blank">후원하기</a>
+  </div>
+  <div class="f-copy">© 2026 블랙리스트 이후<br>POST BLACKLIST</div>
+</footer>
+
+<script>
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', ()=> nav.classList.toggle('on', scrollY>50), {passive:true});
+
+// 배경 텍스트 — 이탤릭 세리프, 밝은 느낌
+const bg = document.getElementById('bgText');
+const words = ['이후','봄','연대','표현','자유','기억','이름','회복','이후','계속','우리','예술인','만든다','이후','싸워라','다정하게'];
+for(let i=0;i<80;i++){
+  const s = document.createElement('span');
+  s.textContent = words[i%words.length];
+  s.style.animationDelay = (Math.random()*5).toFixed(2)+'s';
+  bg.appendChild(s);
+}
+
+// Reveal
+const obs = new IntersectionObserver(es=> es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');obs.unobserve(e.target);}}),{threshold:0.1});
+document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+
+// Counter
+const cobs = new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    if(!e.isIntersecting)return;
+    const t=+e.target.dataset.t; let c=0;
+    const step=Math.ceil(t/60);
+    const suf=t===9?'년':t>100?'':'+';
+    const timer=setInterval(()=>{c=Math.min(c+step,t);e.target.textContent=c.toLocaleString()+suf;if(c>=t)clearInterval(timer);},18);
+    cobs.unobserve(e.target);
+  });
+},{threshold:0.5});
+document.querySelectorAll('[data-t]').forEach(el=>cobs.observe(el));
+
+// 글자 크기
+let size=16;
+function fs(d){size=Math.max(14,Math.min(22,size+d*2));document.documentElement.style.fontSize=size+'px';}
+</script>
+</body>
+</html>
