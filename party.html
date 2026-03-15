@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>후원 파티 04.25 — 블랙리스트 이후</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700;900&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; font-size:16px; }
+body { font-family:'Pretendard', sans-serif; background:#F5F0E8; color:#1C1C1C; overflow-x:hidden; }
+:root {
+  --paper:#F5F0E8; --white:#FDFAF5; --ink:#1C1C1C;
+  --sage:#4E876A; --gold:#C8962A; --rose:#C47B72;
+  --sky:#7BA8C4; --lav:#8B80B8; --muted:rgba(28,28,28,0.45);
+}
+body::after {
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:999;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  mix-blend-mode:multiply; opacity:0.6;
+}
+.size-ctrl { position:fixed; bottom:24px; right:24px; z-index:500; display:flex; flex-direction:column; gap:6px; }
+.size-btn { width:44px; height:44px; border-radius:50%; background:var(--white); border:1.5px solid rgba(0,0,0,0.12); cursor:pointer; font-size:13px; font-weight:900; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 12px rgba(0,0,0,0.07); font-family:'Space Grotesk', sans-serif; transition:background 0.15s; }
+.size-btn:hover { background:#ede7da; }
+
+/* NAV */
+nav { position:fixed; top:0; left:0; right:0; z-index:300; padding:20px 60px; display:flex; justify-content:space-between; align-items:center; transition:all 0.35s; }
+nav.on { background:rgba(245,240,232,0.95); backdrop-filter:blur(20px); padding:13px 60px; border-bottom:1px solid rgba(0,0,0,0.07); }
+.nav-logo { font-family:'DM Serif Display', serif; font-size:18px; color:var(--ink); letter-spacing:0.01em; text-decoration:none; }
+.nav-links { list-style:none; display:flex; gap:32px; align-items:center; }
+.nav-links a { font-family:'Space Grotesk', sans-serif; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); text-decoration:none; transition:color 0.2s; }
+.nav-links a:hover { color:var(--sage); }
+.nav-cta { background:var(--sage) !important; color:white !important; padding:10px 22px; font-weight:700 !important; border-radius:2px; }
+.nav-cta:hover { opacity:0.82 !important; color:white !important; }
+
+/* HERO */
+.p-hero {
+  min-height:80vh; background:var(--gold);
+  display:flex; flex-direction:column; justify-content:center;
+  padding:140px 80px 80px; position:relative; overflow:hidden;
+}
+.p-hero-bg {
+  position:absolute; right:-40px; top:50%; transform:translateY(-50%);
+  font-family:'DM Serif Display', serif; font-size:clamp(200px, 35vw, 500px);
+  color:rgba(255,255,255,0.1); line-height:0.8; font-style:italic;
+  pointer-events:none;
+}
+.p-kicker { font-family:'Space Grotesk', sans-serif; font-size:10px; letter-spacing:0.7em; text-transform:uppercase; color:rgba(255,255,255,0.6); font-weight:700; display:flex; align-items:center; gap:12px; margin-bottom:20px; }
+.p-kicker::before { content:''; width:24px; height:1.5px; background:rgba(255,255,255,0.5); }
+.p-title { font-family:'DM Serif Display', serif; font-size:clamp(48px, 8vw, 100px); line-height:0.95; color:white; letter-spacing:-0.03em; margin-bottom:20px; position:relative; z-index:2; }
+.p-title em { font-style:italic; color:rgba(255,255,255,0.5); }
+.p-sub { font-size:clamp(16px, 2vw, 20px); color:rgba(255,255,255,0.7); line-height:2; max-width:480px; position:relative; z-index:2; }
+
+/* INFO GRID */
+.info-sec { padding:100px 80px; background:var(--white); }
+.info-grid { display:grid; grid-template-columns:1fr 1fr; gap:60px; max-width:1000px; }
+.info-left h2 { font-family:'DM Serif Display', serif; font-size:clamp(32px, 4vw, 48px); line-height:1.1; margin-bottom:24px; }
+.info-left h2 em { color:var(--gold); font-style:italic; }
+.info-left p { font-size:16px; line-height:2.1; color:var(--muted); }
+
+.info-card { background:var(--paper); padding:40px; margin-bottom:16px; }
+.ic-label { font-family:'Space Grotesk', sans-serif; font-size:9px; letter-spacing:0.5em; text-transform:uppercase; color:var(--gold); font-weight:700; margin-bottom:12px; }
+.ic-value { font-size:20px; font-weight:700; line-height:1.6; }
+.ic-note { font-size:14px; color:var(--muted); margin-top:6px; line-height:1.8; }
+
+/* PROGRAM */
+.prog-sec { padding:100px 80px; background:var(--paper); }
+.sec-lbl { font-family:'Space Grotesk', sans-serif; font-size:10px; letter-spacing:0.55em; text-transform:uppercase; font-weight:700; display:flex; align-items:center; gap:14px; margin-bottom:52px; }
+.sec-lbl::before { content:''; width:20px; height:1.5px; }
+.lbl-gold { color:var(--gold); } .lbl-gold::before { background:var(--gold); }
+.lbl-sage { color:var(--sage); } .lbl-sage::before { background:var(--sage); }
+
+.prog-list { max-width:700px; }
+.prog-item { display:grid; grid-template-columns:80px 1fr; gap:32px; padding:28px 0; border-bottom:1px dashed rgba(0,0,0,0.1); }
+.prog-time { font-family:'DM Serif Display', serif; font-size:17px; color:var(--gold); font-style:italic; padding-top:2px; }
+.prog-name { font-size:17px; font-weight:700; margin-bottom:4px; }
+.prog-desc { font-size:14px; color:var(--muted); line-height:1.8; }
+
+/* CTA */
+.cta-sec { padding:100px 80px; background:var(--sage); text-align:center; }
+.cta-title { font-family:'DM Serif Display', serif; font-size:clamp(36px, 5vw, 56px); color:white; line-height:1.1; margin-bottom:16px; }
+.cta-title em { color:var(--gold); font-style:italic; }
+.cta-desc { font-size:17px; color:rgba(255,255,255,0.7); line-height:2; margin-bottom:40px; }
+.btn-w { background:white; color:var(--sage); padding:17px 64px; font-family:'Space Grotesk', sans-serif; font-size:13px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; text-decoration:none; display:inline-block; transition:opacity 0.2s, transform 0.15s; }
+.btn-w:hover { opacity:0.88; transform:translateY(-2px); }
+.btn-out-w { background:transparent; color:white; padding:16px 44px; font-family:'Space Grotesk', sans-serif; font-size:12px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; text-decoration:none; display:inline-block; border:1.5px solid rgba(255,255,255,0.4); transition:all 0.2s; margin-left:12px; }
+.btn-out-w:hover { border-color:white; transform:translateY(-2px); }
+
+/* FOOTER */
+footer { background:var(--ink); padding:56px 80px; display:flex; justify-content:space-between; align-items:flex-end; }
+.f-logo { font-family:'DM Serif Display', serif; font-size:22px; color:white; margin-bottom:6px; }
+.f-logo em { color:var(--sage); font-style:italic; }
+.f-sub { font-size:12px; color:rgba(255,255,255,0.28); font-family:'Space Grotesk', sans-serif; letter-spacing:0.05em; }
+.f-links { display:flex; gap:24px; }
+.f-links a { color:rgba(255,255,255,0.33); text-decoration:none; font-family:'Space Grotesk', sans-serif; font-size:12px; letter-spacing:0.07em; transition:color 0.2s; }
+.f-links a:hover { color:var(--sage); }
+.f-copy { font-family:'Space Grotesk', sans-serif; font-size:10px; color:rgba(255,255,255,0.18); text-align:right; letter-spacing:0.12em; }
+
+/* REVEAL */
+.rv { opacity:0; transform:translateY(20px); transition:opacity 0.75s cubic-bezier(0.16,1,0.3,1), transform 0.75s cubic-bezier(0.16,1,0.3,1); }
+.rv.on { opacity:1; transform:none; }
+.d1{transition-delay:.08s} .d2{transition-delay:.16s} .d3{transition-delay:.25s}
+
+/* MOBILE */
+@media(max-width:768px){
+  nav { padding:16px 20px; } nav.on { padding:12px 20px; }
+  .nav-links li:not(:last-child) { display:none; }
+  .p-hero { padding:120px 24px 60px; min-height:60vh; }
+  .info-sec { padding:60px 24px; }
+  .info-grid { grid-template-columns:1fr; gap:32px; }
+  .prog-sec { padding:60px 24px; }
+  .prog-item { grid-template-columns:64px 1fr; gap:16px; }
+  .cta-sec { padding:60px 24px; }
+  .btn-out-w { margin-left:0; margin-top:12px; }
+  footer { flex-direction:column; gap:28px; align-items:flex-start; padding:40px 24px; }
+  .f-copy { text-align:left; }
+  .size-ctrl { bottom:80px; right:16px; }
+}
+</style>
+</head>
+<body>
+
+<div class="size-ctrl">
+  <button class="size-btn" onclick="fs(1)">A+</button>
+  <button class="size-btn" onclick="fs(-1)">A−</button>
+</div>
+
+<nav id="nav">
+  <a href="index.html" class="nav-logo">블랙리스트 이후</a>
+  <ul class="nav-links">
+    <li><a href="index.html#about">소개</a></li>
+    <li><a href="index.html#timeline">활동</a></li>
+    <li><a href="party.html">후원파티</a></li>
+    <li><a href="support.html">후원 안내</a></li>
+    <li><a href="https://view.hyosungcms.co.kr/simple-agreement/payer-regist" target="_blank" class="nav-cta">후원하기</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="p-hero">
+  <div class="p-hero-bg">04·25</div>
+  <div class="p-kicker">FUNDRAISING PARTY · 2026</div>
+  <h1 class="p-title">블랙리스트 이후<br>후원 <em>파티</em></h1>
+  <p class="p-sub">함께여서 계속됩니다.<br>모이고, 나누고, 이어가는 밤.</p>
+</section>
+
+<!-- INFO -->
+<section class="info-sec">
+  <div class="info-grid">
+    <div class="info-left rv">
+      <h2>함께<br><em>이어서</em><br>계속됩니다</h2>
+      <p>블랙리스트 이후의 활동은 여러분의 연대로 이어집니다. 후원 파티는 단순한 모금 행사가 아닙니다. 예술인들이 모이고, 서로의 이름을 기억하고, 다시 이후를 약속하는 자리입니다.</p>
+    </div>
+    <div>
+      <div class="info-card rv d1">
+        <div class="ic-label">DATE</div>
+        <div class="ic-value">2026년 4월 25일 (토)</div>
+        <div class="ic-note">오후 6시 — 오후 10시</div>
+      </div>
+      <div class="info-card rv d2">
+        <div class="ic-label">LOCATION</div>
+        <div class="ic-value">추후 공개</div>
+        <div class="ic-note">서울 시내 · 확정 시 업데이트</div>
+      </div>
+      <div class="info-card rv d3">
+        <div class="ic-label">PARTICIPATION</div>
+        <div class="ic-value">후원으로 함께하기</div>
+        <div class="ic-note">효성 CMS 정기 후원 또는 일시 후원으로 참여<br>후원자 전원 파티 초대</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROGRAM -->
+<section class="prog-sec">
+  <div class="sec-lbl lbl-gold rv">PROGRAM</div>
+  <div class="prog-list">
+    <div class="prog-item rv">
+      <div class="prog-time">18:00</div>
+      <div><div class="prog-name">오프닝 · 만남</div><div class="prog-desc">환영 인사와 자유로운 교류의 시간</div></div>
+    </div>
+    <div class="prog-item rv d1">
+      <div class="prog-time">18:30</div>
+      <div><div class="prog-name">블랙리스트 이후, 지금</div><div class="prog-desc">2026년 활동 보고 및 향후 방향 공유</div></div>
+    </div>
+    <div class="prog-item rv d2">
+      <div class="prog-time">19:00</div>
+      <div><div class="prog-name">공연 · 퍼포먼스</div><div class="prog-desc">예술인들의 자리. 프로그램 추후 공개</div></div>
+    </div>
+    <div class="prog-item rv d3">
+      <div class="prog-time">20:00</div>
+      <div><div class="prog-name">나눔 · 연대의 시간</div><div class="prog-desc">이야기를 나누고, 이후를 약속하는 밤</div></div>
+    </div>
+    <div class="prog-item rv">
+      <div class="prog-time">22:00</div>
+      <div><div class="prog-name">클로징</div><div class="prog-desc">끝까지 싸워라, 사랑스럽고 다정하게</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-sec">
+  <h2 class="cta-title rv">후원하고<br><em>함께하기</em></h2>
+  <p class="cta-desc rv d1">사랑스럽고 다정하게, 끝까지.<br>후원자 전원 파티에 초대됩니다.</p>
+  <div class="rv d2">
+    <a href="https://view.hyosungcms.co.kr/simple-agreement/payer-regist" target="_blank" class="btn-w">지금 후원하기 →</a>
+    <a href="index.html" class="btn-out-w">메인으로 돌아가기</a>
+  </div>
+</section>
+
+<footer>
+  <div>
+    <div class="f-logo">블랙리스트<em>이후</em></div>
+    <div class="f-sub">표현의 자유를 위한 민간 전문 기구 · 2017 — NOW</div>
+  </div>
+  <div class="f-links">
+    <a href="https://www.instagram.com/post_blacklist" target="_blank">Instagram</a>
+    <a href="https://www.facebook.com/profile.php?id=100089032202148" target="_blank">Facebook</a>
+    <a href="https://view.hyosungcms.co.kr/simple-agreement/payer-regist" target="_blank">후원하기</a>
+  </div>
+  <div class="f-copy">© 2026 블랙리스트 이후<br>POST BLACKLIST</div>
+</footer>
+
+<script>
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('on',scrollY>50),{passive:true});
+const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');obs.unobserve(e.target);}}),{threshold:0.1});
+document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+let size=16;
+function fs(d){size=Math.max(14,Math.min(22,size+d*2));document.documentElement.style.fontSize=size+'px';}
+</script>
+</body>
+</html>

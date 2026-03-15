@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>후원 안내 — 블랙리스트 이후</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700;900&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; font-size:16px; }
+body { font-family:'Pretendard', sans-serif; background:#F5F0E8; color:#1C1C1C; overflow-x:hidden; }
+:root {
+  --paper:#F5F0E8; --white:#FDFAF5; --ink:#1C1C1C;
+  --sage:#4E876A; --gold:#C8962A; --rose:#C47B72;
+  --sky:#7BA8C4; --lav:#8B80B8; --muted:rgba(28,28,28,0.45);
+}
+body::after {
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:999;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  mix-blend-mode:multiply; opacity:0.6;
+}
+.size-ctrl { position:fixed; bottom:24px; right:24px; z-index:500; display:flex; flex-direction:column; gap:6px; }
+.size-btn { width:44px; height:44px; border-radius:50%; background:var(--white); border:1.5px solid rgba(0,0,0,0.12); cursor:pointer; font-size:13px; font-weight:900; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 12px rgba(0,0,0,0.07); font-family:'Space Grotesk', sans-serif; transition:background 0.15s; }
+.size-btn:hover { background:#ede7da; }
+
+/* NAV */
+nav { position:fixed; top:0; left:0; right:0; z-index:300; padding:20px 60px; display:flex; justify-content:space-between; align-items:center; transition:all 0.35s; }
+nav.on { background:rgba(245,240,232,0.95); backdrop-filter:blur(20px); padding:13px 60px; border-bottom:1px solid rgba(0,0,0,0.07); }
+.nav-logo { font-family:'DM Serif Display', serif; font-size:18px; color:var(--ink); letter-spacing:0.01em; text-decoration:none; }
+.nav-links { list-style:none; display:flex; gap:32px; align-items:center; }
+.nav-links a { font-family:'Space Grotesk', sans-serif; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); text-decoration:none; transition:color 0.2s; }
+.nav-links a:hover { color:var(--sage); }
+.nav-cta { background:var(--sage) !important; color:white !important; padding:10px 22px; font-weight:700 !important; border-radius:2px; }
+.nav-cta:hover { opacity:0.82 !important; color:white !important; }
+
+/* HERO */
+.s-hero {
+  min-height:60vh; background:var(--sage);
+  display:flex; flex-direction:column; justify-content:center;
+  padding:140px 80px 80px; position:relative; overflow:hidden;
+}
+.s-hero-bg {
+  position:absolute; right:-20px; bottom:-30px;
+  font-family:'DM Serif Display', serif; font-size:clamp(120px, 25vw, 350px);
+  color:rgba(255,255,255,0.06); font-style:italic; pointer-events:none;
+}
+.s-kicker { font-family:'Space Grotesk', sans-serif; font-size:10px; letter-spacing:0.7em; text-transform:uppercase; color:rgba(255,255,255,0.6); font-weight:700; display:flex; align-items:center; gap:12px; margin-bottom:20px; }
+.s-kicker::before { content:''; width:24px; height:1.5px; background:rgba(255,255,255,0.5); }
+.s-title { font-family:'DM Serif Display', serif; font-size:clamp(48px, 8vw, 90px); line-height:0.95; color:white; letter-spacing:-0.03em; margin-bottom:20px; position:relative; z-index:2; }
+.s-title em { font-style:italic; color:var(--gold); }
+.s-sub { font-size:clamp(16px, 2vw, 19px); color:rgba(255,255,255,0.7); line-height:2; max-width:480px; position:relative; z-index:2; }
+
+/* METHODS */
+.methods-sec { padding:100px 80px; background:var(--white); }
+.sec-lbl { font-family:'Space Grotesk', sans-serif; font-size:10px; letter-spacing:0.55em; text-transform:uppercase; font-weight:700; display:flex; align-items:center; gap:14px; margin-bottom:52px; }
+.sec-lbl::before { content:''; width:20px; height:1.5px; }
+.lbl-sage { color:var(--sage); } .lbl-sage::before { background:var(--sage); }
+.lbl-gold { color:var(--gold); } .lbl-gold::before { background:var(--gold); }
+
+.methods-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; max-width:900px; }
+.method-card {
+  padding:48px 44px; position:relative; overflow:hidden;
+  transition:transform 0.2s;
+}
+.method-card:hover { transform:translateY(-4px); }
+.mc-primary { background:var(--sage); color:white; }
+.mc-secondary { background:var(--paper); border:1.5px solid rgba(0,0,0,0.07); }
+.mc-badge { font-family:'Space Grotesk', sans-serif; font-size:9px; letter-spacing:0.4em; text-transform:uppercase; font-weight:700; margin-bottom:20px; display:inline-block; padding:4px 12px; }
+.mc-primary .mc-badge { background:rgba(255,255,255,0.2); color:white; }
+.mc-secondary .mc-badge { background:var(--gold); color:white; }
+.mc-title { font-family:'DM Serif Display', serif; font-size:clamp(28px, 3.5vw, 38px); line-height:1.1; margin-bottom:16px; }
+.mc-primary .mc-title { color:white; }
+.mc-desc { font-size:15px; line-height:2.1; margin-bottom:24px; }
+.mc-primary .mc-desc { color:rgba(255,255,255,0.8); }
+.mc-secondary .mc-desc { color:var(--muted); }
+.mc-list { list-style:none; margin-bottom:28px; }
+.mc-list li { font-size:14px; line-height:2.2; padding-left:16px; position:relative; }
+.mc-list li::before { content:'—'; position:absolute; left:0; }
+.mc-primary .mc-list li { color:rgba(255,255,255,0.7); }
+.mc-secondary .mc-list li { color:var(--muted); }
+.btn-w { background:white; color:var(--sage); padding:17px 48px; font-family:'Space Grotesk', sans-serif; font-size:12px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; text-decoration:none; display:inline-block; transition:opacity 0.2s, transform 0.15s; }
+.btn-w:hover { opacity:0.88; transform:translateY(-2px); }
+.btn-gold { background:var(--gold); color:white; padding:17px 48px; font-family:'Space Grotesk', sans-serif; font-size:12px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; text-decoration:none; display:inline-block; transition:opacity 0.2s, transform 0.15s; }
+.btn-gold:hover { opacity:0.85; transform:translateY(-2px); }
+
+/* WHY */
+.why-sec { padding:100px 80px; background:var(--paper); }
+.why-content { max-width:700px; }
+.why-content h2 { font-family:'DM Serif Display', serif; font-size:clamp(32px, 4vw, 48px); line-height:1.1; margin-bottom:28px; }
+.why-content h2 em { color:var(--sage); font-style:italic; }
+.why-content p { font-size:16px; line-height:2.2; color:var(--muted); margin-bottom:20px; }
+.why-content blockquote {
+  font-family:'DM Serif Display', serif; font-size:clamp(20px, 3vw, 28px);
+  font-style:italic; color:var(--sage); line-height:1.6;
+  padding:32px 0 32px 28px; border-left:3px solid var(--sage);
+  margin:36px 0;
+}
+
+/* FAQ */
+.faq-sec { padding:100px 80px; background:var(--white); }
+.faq-list { max-width:700px; }
+.faq-item { border-bottom:1px dashed rgba(0,0,0,0.1); }
+.faq-q { font-size:16px; font-weight:700; padding:24px 0; cursor:pointer; display:flex; justify-content:space-between; align-items:center; }
+.faq-q::after { content:'+'; font-family:'Space Grotesk', sans-serif; font-size:20px; color:var(--sage); font-weight:300; transition:transform 0.2s; }
+.faq-item.open .faq-q::after { transform:rotate(45deg); }
+.faq-a { font-size:15px; line-height:2.1; color:var(--muted); padding:0 0 24px; display:none; }
+.faq-item.open .faq-a { display:block; }
+
+/* CTA */
+.cta-sec { padding:100px 80px; background:var(--gold); text-align:center; }
+.cta-title { font-family:'DM Serif Display', serif; font-size:clamp(36px, 5vw, 56px); color:white; line-height:1.1; margin-bottom:16px; }
+.cta-desc { font-size:17px; color:rgba(255,255,255,0.75); line-height:2; margin-bottom:40px; }
+.btn-white-ink { background:white; color:var(--gold); padding:17px 64px; font-family:'Space Grotesk', sans-serif; font-size:13px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; text-decoration:none; display:inline-block; transition:opacity 0.2s, transform 0.15s; }
+.btn-white-ink:hover { opacity:0.88; transform:translateY(-2px); }
+.btn-out-w { background:transparent; color:white; padding:16px 44px; font-family:'Space Grotesk', sans-serif; font-size:12px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; text-decoration:none; display:inline-block; border:1.5px solid rgba(255,255,255,0.4); transition:all 0.2s; margin-left:12px; }
+.btn-out-w:hover { border-color:white; transform:translateY(-2px); }
+
+/* FOOTER */
+footer { background:var(--ink); padding:56px 80px; display:flex; justify-content:space-between; align-items:flex-end; }
+.f-logo { font-family:'DM Serif Display', serif; font-size:22px; color:white; margin-bottom:6px; }
+.f-logo em { color:var(--sage); font-style:italic; }
+.f-sub { font-size:12px; color:rgba(255,255,255,0.28); font-family:'Space Grotesk', sans-serif; letter-spacing:0.05em; }
+.f-links { display:flex; gap:24px; }
+.f-links a { color:rgba(255,255,255,0.33); text-decoration:none; font-family:'Space Grotesk', sans-serif; font-size:12px; letter-spacing:0.07em; transition:color 0.2s; }
+.f-links a:hover { color:var(--sage); }
+.f-copy { font-family:'Space Grotesk', sans-serif; font-size:10px; color:rgba(255,255,255,0.18); text-align:right; letter-spacing:0.12em; }
+
+/* REVEAL */
+.rv { opacity:0; transform:translateY(20px); transition:opacity 0.75s cubic-bezier(0.16,1,0.3,1), transform 0.75s cubic-bezier(0.16,1,0.3,1); }
+.rv.on { opacity:1; transform:none; }
+.d1{transition-delay:.08s} .d2{transition-delay:.16s} .d3{transition-delay:.25s}
+
+/* MOBILE */
+@media(max-width:768px){
+  nav { padding:16px 20px; } nav.on { padding:12px 20px; }
+  .nav-links li:not(:last-child) { display:none; }
+  .s-hero { padding:120px 24px 60px; min-height:50vh; }
+  .methods-sec { padding:60px 24px; }
+  .methods-grid { grid-template-columns:1fr; }
+  .method-card { padding:36px 28px; }
+  .why-sec { padding:60px 24px; }
+  .faq-sec { padding:60px 24px; }
+  .cta-sec { padding:60px 24px; }
+  .btn-out-w { margin-left:0; margin-top:12px; }
+  footer { flex-direction:column; gap:28px; align-items:flex-start; padding:40px 24px; }
+  .f-copy { text-align:left; }
+  .size-ctrl { bottom:80px; right:16px; }
+}
+</style>
+</head>
+<body>
+
+<div class="size-ctrl">
+  <button class="size-btn" onclick="fs(1)">A+</button>
+  <button class="size-btn" onclick="fs(-1)">A−</button>
+</div>
+
+<nav id="nav">
+  <a href="index.html" class="nav-logo">블랙리스트 이후</a>
+  <ul class="nav-links">
+    <li><a href="index.html#about">소개</a></li>
+    <li><a href="index.html#timeline">활동</a></li>
+    <li><a href="party.html">후원파티</a></li>
+    <li><a href="support.html">후원 안내</a></li>
+    <li><a href="https://view.hyosungcms.co.kr/simple-agreement/payer-regist" target="_blank" class="nav-cta">후원하기</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="s-hero">
+  <div class="s-hero-bg">연대</div>
+  <div class="s-kicker">SUPPORT · 후원 안내</div>
+  <h1 class="s-title">함께<br><em>이어서</em></h1>
+  <p class="s-sub">사랑스럽고 다정하게, 끝까지.<br>여러분의 후원으로 이어집니다.</p>
+</section>
+
+<!-- METHODS -->
+<section class="methods-sec">
+  <div class="sec-lbl lbl-sage rv">HOW TO SUPPORT</div>
+  <div class="methods-grid">
+    <div class="method-card mc-primary rv">
+      <div class="mc-badge">RECOMMENDED</div>
+      <div class="mc-title">정기 후원</div>
+      <div class="mc-desc">효성 CMS 자동 결제로<br>매월 안정적으로 함께합니다.</div>
+      <ul class="mc-list">
+        <li>월 1만원부터 자유 설정</li>
+        <li>매월 자동 출금</li>
+        <li>언제든 금액 변경·해지 가능</li>
+        <li>후원파티 초대</li>
+      </ul>
+      <a href="https://view.hyosungcms.co.kr/simple-agreement/payer-regist" target="_blank" class="btn-w">정기 후원 신청 →</a>
+    </div>
+    <div class="method-card mc-secondary rv d1">
+      <div class="mc-badge">ALSO WELCOME</div>
+      <div class="mc-title">일시 후원</div>
+      <div class="mc-desc">계좌이체로<br>한 번의 마음을 전합니다.</div>
+      <ul class="mc-list">
+        <li>금액 자유</li>
+        <li>계좌: 준비 중</li>
+        <li>입금 후 연락 주시면 확인</li>
+        <li>후원파티 초대</li>
+      </ul>
+      <a href="https://view.hyosungcms.co.kr/simple-agreement/payer-regist" target="_blank" class="btn-gold">후원 신청 →</a>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section class="why-sec">
+  <div class="sec-lbl lbl-gold rv">WHY SUPPORT</div>
+  <div class="why-content">
+    <h2 class="rv">후원금은<br><em>어디에</em> 쓰이나요</h2>
+    <p class="rv d1">블랙리스트 이후는 정부 지원금을 받지 않는 독립적인 민간 전문 기구입니다. 여러분의 후원은 아래 활동에 직접 사용됩니다.</p>
+    <p class="rv d2">
+      <strong>1. 진상조사 · 기록</strong><br>
+      블랙리스트 피해 사례 수집, 가해자 복귀 모니터링, 미결 사건 추적<br><br>
+      <strong>2. 법·제도 개혁</strong><br>
+      예술인권리보장법 개정 활동, 재발 방지 시스템 구축<br><br>
+      <strong>3. 피해자 회복 · 연대</strong><br>
+      피해 예술인 지원, 연대 행사, 국제 네트워크 구축<br><br>
+      <strong>4. 운영</strong><br>
+      조직 운영, 홈페이지 유지, 홍보 활동
+    </p>
+    <blockquote class="rv d3">끝까지 싸워라,<br>사랑스럽고 다정하게.</blockquote>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-sec">
+  <div class="sec-lbl lbl-sage rv">FAQ</div>
+  <div class="faq-list">
+    <div class="faq-item rv">
+      <div class="faq-q">효성 CMS가 무엇인가요?</div>
+      <div class="faq-a">효성 CMS는 은행 자동이체 서비스입니다. 매월 지정된 날짜에 설정한 금액이 자동 출금됩니다. 카드가 아닌 통장에서 직접 출금되므로 수수료가 매우 낮습니다.</div>
+    </div>
+    <div class="faq-item rv d1">
+      <div class="faq-q">후원 금액을 변경하거나 해지할 수 있나요?</div>
+      <div class="faq-a">네, 언제든 가능합니다. 블랙리스트 이후에 연락 주시면 바로 처리해 드립니다.</div>
+    </div>
+    <div class="faq-item rv d2">
+      <div class="faq-q">후원금 영수증(기부금 영수증)을 받을 수 있나요?</div>
+      <div class="faq-a">현재 기부금 영수증 발급은 준비 중입니다. 확정되면 안내드리겠습니다.</div>
+    </div>
+    <div class="faq-item rv d3">
+      <div class="faq-q">후원하면 파티에 참석할 수 있나요?</div>
+      <div class="faq-a">네, 후원자 전원 4월 25일 후원 파티에 초대됩니다. 후원 완료 후 별도 안내를 드립니다.</div>
+    </div>
+    <div class="faq-item rv">
+      <div class="faq-q">일시 후원 계좌는 언제 안내되나요?</div>
+      <div class="faq-a">현재 준비 중이며, 확정되는 대로 이 페이지에 업데이트됩니다. 급하신 경우 인스타그램 DM으로 문의해 주세요.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-sec">
+  <h2 class="cta-title rv">지금,<br>함께하기</h2>
+  <p class="cta-desc rv d1">작은 후원이 큰 연대가 됩니다.</p>
+  <div class="rv d2">
+    <a href="https://view.hyosungcms.co.kr/simple-agreement/payer-regist" target="_blank" class="btn-white-ink">후원 신청하기 →</a>
+    <a href="index.html" class="btn-out-w">메인으로 돌아가기</a>
+  </div>
+</section>
+
+<footer>
+  <div>
+    <div class="f-logo">블랙리스트<em>이후</em></div>
+    <div class="f-sub">표현의 자유를 위한 민간 전문 기구 · 2017 — NOW</div>
+  </div>
+  <div class="f-links">
+    <a href="https://www.instagram.com/post_blacklist" target="_blank">Instagram</a>
+    <a href="https://www.facebook.com/profile.php?id=100089032202148" target="_blank">Facebook</a>
+    <a href="https://view.hyosungcms.co.kr/simple-agreement/payer-regist" target="_blank">후원하기</a>
+  </div>
+  <div class="f-copy">© 2026 블랙리스트 이후<br>POST BLACKLIST</div>
+</footer>
+
+<script>
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('on',scrollY>50),{passive:true});
+const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');obs.unobserve(e.target);}}),{threshold:0.1});
+document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+// FAQ toggle
+document.querySelectorAll('.faq-q').forEach(q=>q.addEventListener('click',()=>q.parentElement.classList.toggle('open')));
+let size=16;
+function fs(d){size=Math.max(14,Math.min(22,size+d*2));document.documentElement.style.fontSize=size+'px';}
+</script>
+</body>
+</html>
