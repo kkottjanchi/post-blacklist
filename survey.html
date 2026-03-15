@@ -21,7 +21,7 @@ body::after {
   mix-blend-mode:multiply; opacity:0.6;
 }
 
-/* PROGRESS BAR */
+/* PROGRESS */
 .progress-wrap { position:fixed; top:0; left:0; right:0; z-index:400; height:4px; background:rgba(0,0,0,0.06); }
 .progress-bar { height:100%; background:var(--gold); width:0%; transition:width 0.5s cubic-bezier(0.16,1,0.3,1); }
 
@@ -41,6 +41,7 @@ body::after {
 .sv-title em { font-style:italic; color:rgba(255,255,255,0.45); }
 .sv-sub { font-size:clamp(15px, 1.8vw, 18px); color:rgba(255,255,255,0.7); line-height:2; max-width:520px; }
 .sv-timer { display:inline-block; background:rgba(255,255,255,0.15); backdrop-filter:blur(8px); padding:10px 20px; border-radius:3px; margin-top:20px; font-family:'Space Grotesk', sans-serif; font-size:13px; font-weight:700; color:white; letter-spacing:0.05em; }
+.sv-note { font-size:14px; color:rgba(255,255,255,0.5); margin-top:12px; line-height:1.8; }
 
 /* FORM */
 .form-wrap { max-width:680px; margin:0 auto; padding:60px 24px 100px; }
@@ -73,24 +74,25 @@ body::after {
   box-shadow:inset 3px 0 0 var(--gold);
 }
 .opt-card label .opt-emoji { margin-right:10px; font-size:18px; }
+.opt-card label .opt-sub { display:block; font-size:13px; color:var(--muted); margin-top:2px; }
 
-/* CONCEPT CARDS */
-.concept-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
+/* CONCEPT GRID — 2열 */
+.concept-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
 .concept-card { position:relative; }
 .concept-card input { position:absolute; opacity:0; pointer-events:none; }
 .concept-card label {
   display:flex; flex-direction:column; align-items:center; text-align:center;
-  padding:28px 16px 20px; background:var(--white); border:1.5px solid rgba(0,0,0,0.06);
-  cursor:pointer; transition:all 0.2s; min-height:160px; justify-content:center;
+  padding:24px 12px 18px; background:var(--white); border:1.5px solid rgba(0,0,0,0.06);
+  cursor:pointer; transition:all 0.2s; min-height:120px; justify-content:center;
 }
 .concept-card label:hover { border-color:var(--gold); transform:translateY(-2px); }
 .concept-card input:checked + label {
   border-color:var(--gold); background:#fdf3e0;
   box-shadow:0 0 0 2px var(--gold);
 }
-.concept-emoji { font-size:36px; margin-bottom:10px; }
-.concept-name { font-size:15px; font-weight:700; margin-bottom:4px; }
-.concept-desc { font-size:12px; color:var(--muted); line-height:1.6; }
+.concept-emoji { font-size:32px; margin-bottom:8px; }
+.concept-name { font-size:14px; font-weight:700; margin-bottom:2px; }
+.concept-desc { font-size:11px; color:var(--muted); line-height:1.5; }
 
 /* TEXT INPUT */
 .q-input {
@@ -108,13 +110,16 @@ body::after {
 .q-range::-webkit-slider-thumb { -webkit-appearance:none; width:24px; height:24px; background:var(--gold); border-radius:50%; cursor:pointer; border:3px solid var(--white); box-shadow:0 2px 8px rgba(0,0,0,0.15); }
 .q-range-label { display:flex; justify-content:space-between; font-size:11px; color:var(--muted); margin-top:4px; }
 
+/* INFO BOX */
+.info-box { background:var(--white); border-left:3px solid var(--gold); padding:16px 20px; font-size:14px; line-height:2; color:var(--ink); margin-bottom:28px; }
+
 /* SUBMIT */
 .submit-sec { text-align:center; padding:40px 0; }
 .submit-btn {
   background:var(--gold); color:white; border:none; padding:18px 72px;
   font-family:'Space Grotesk', sans-serif; font-size:14px; font-weight:700;
   letter-spacing:0.15em; text-transform:uppercase; cursor:pointer;
-  transition:all 0.2s; position:relative;
+  transition:all 0.2s;
 }
 .submit-btn:hover { opacity:0.88; transform:translateY(-2px); }
 .submit-btn:active { transform:scale(0.97); }
@@ -145,7 +150,7 @@ footer { background:var(--ink); padding:40px 80px; display:flex; justify-content
 @media(max-width:768px){
   .sv-hero { padding:60px 24px 40px; min-height:40vh; }
   .form-wrap { padding:40px 20px 80px; }
-  .concept-grid { grid-template-columns:1fr; }
+  .concept-grid { grid-template-columns:1fr 1fr; }
   .sec-desc { padding-left:0; }
   footer { flex-direction:column; gap:16px; padding:32px 24px; }
 }
@@ -160,8 +165,9 @@ footer { background:var(--ink); padding:40px 80px; display:flex; justify-content
   <div class="sv-hero-bg">設問</div>
   <div class="sv-kicker">EXECUTIVE COMMITTEE SURVEY</div>
   <h1 class="sv-title">5분이면<br><em>끝납니다</em></h1>
-  <p class="sv-sub">4/25 후원파티를 만들려면 여러분의 답이 필요합니다.<br>17명 전원 응답이 와야 다음 단계로 넘어갑니다.</p>
+  <p class="sv-sub">혼자 다 정하는 것보다 같이 정하는 게 낫잖아요.<br>잘하고 있다 싶으면 설문이라도 좀 써주세요.<br>17명 전원 응답이 와야 다음 단계로 넘어갑니다.</p>
   <div class="sv-timer">오늘(3/15) 자정까지</div>
+  <div class="sv-note">4/25 당일은 오후 1시 ~ 8시, 전원 풀 참여입니다. (이건 확정)</div>
 </section>
 
 <!-- FORM -->
@@ -172,7 +178,7 @@ footer { background:var(--ink); padding:40px 80px; display:flex; justify-content
 <div class="sv-section" data-section="0">
   <div class="q-block">
     <div class="q-label q-required">이름</div>
-    <div class="q-hint">누가 답했는지 알아야 다음 단계를 진행할 수 있습니다.</div>
+    <div class="q-hint">익명이면 좋겠지만... 누가 답했는지 알아야 역할 드립니다.</div>
     <input type="text" class="q-input" name="name" placeholder="실명" required>
   </div>
 </div>
@@ -183,37 +189,82 @@ footer { background:var(--ink); padding:40px 80px; display:flex; justify-content
     <div class="sec-num">01</div>
     <div class="sec-title">후원파티 컨셉</div>
   </div>
-  <div class="sec-desc">야외 대관은 경쟁 치열합니다. 컨셉이 정해져야 장소를 잡습니다.</div>
+  <div class="sec-desc">컨셉이 정해져야 장소를 잡습니다. 대관 경쟁 치열하니까 빨리 정합시다. 안 정하면 제가 정합니다.</div>
 
   <div class="q-block">
     <div class="q-label q-required">어떤 파티가 끌리세요?</div>
-    <div class="q-hint">하나만 골라주세요.</div>
+    <div class="q-hint">끌리는 거 다 골라주세요. 많이 골라도 됩니다. 욕심껏.</div>
     <div class="concept-grid">
       <div class="concept-card">
-        <input type="radio" name="concept" id="cA" value="피크닉" required>
-        <label for="cA">
+        <input type="checkbox" name="concept" id="c1" value="야외 피크닉">
+        <label for="c1">
           <div class="concept-emoji">🧺</div>
           <div class="concept-name">야외 피크닉</div>
           <div class="concept-desc">돗자리, 음식, 자유로운 만남</div>
         </label>
       </div>
       <div class="concept-card">
-        <input type="radio" name="concept" id="cB" value="공연+마켓">
-        <label for="cB">
-          <div class="concept-emoji">🎪</div>
-          <div class="concept-name">공연 + 마켓</div>
-          <div class="concept-desc">무대 공연과 부스 중심</div>
+        <input type="checkbox" name="concept" id="c2" value="문학의 밤">
+        <label for="c2">
+          <div class="concept-emoji">📚</div>
+          <div class="concept-name">문학의 밤</div>
+          <div class="concept-desc">낭독, 음악, 조용한 연대</div>
         </label>
       </div>
       <div class="concept-card">
-        <input type="radio" name="concept" id="cC" value="페스타">
-        <label for="cC">
-          <div class="concept-emoji">🎉</div>
-          <div class="concept-name">야외 페스타</div>
-          <div class="concept-desc">공연/토크/푸드 섞인 축제</div>
+        <input type="checkbox" name="concept" id="c3" value="호프">
+        <label for="c3">
+          <div class="concept-emoji">🍺</div>
+          <div class="concept-name">호프 파티</div>
+          <div class="concept-desc">맥주, 안주, 시끌벅적 교류</div>
+        </label>
+      </div>
+      <div class="concept-card">
+        <input type="checkbox" name="concept" id="c4" value="찻집/살롱">
+        <label for="c4">
+          <div class="concept-emoji">🍵</div>
+          <div class="concept-name">찻집 · 살롱</div>
+          <div class="concept-desc">차와 대화, 느슨한 모임</div>
+        </label>
+      </div>
+      <div class="concept-card">
+        <input type="checkbox" name="concept" id="c5" value="운동회">
+        <label for="c5">
+          <div class="concept-emoji">🏃</div>
+          <div class="concept-name">운동회</div>
+          <div class="concept-desc">몸 쓰고 뛰고 웃는 날</div>
+        </label>
+      </div>
+      <div class="concept-card">
+        <input type="checkbox" name="concept" id="c6" value="보드게임">
+        <label for="c6">
+          <div class="concept-emoji">🎲</div>
+          <div class="concept-name">보드게임</div>
+          <div class="concept-desc">게임하면서 친해지기</div>
+        </label>
+      </div>
+      <div class="concept-card">
+        <input type="checkbox" name="concept" id="c7" value="공연형">
+        <label for="c7">
+          <div class="concept-emoji">🎤</div>
+          <div class="concept-name">공연 · 무대</div>
+          <div class="concept-desc">무대 중심, 관객 참여</div>
+        </label>
+      </div>
+      <div class="concept-card">
+        <input type="checkbox" name="concept" id="c8" value="바자회">
+        <label for="c8">
+          <div class="concept-emoji">🛍️</div>
+          <div class="concept-name">바자회 · 마켓</div>
+          <div class="concept-desc">팔고 사고 나누는 장터</div>
         </label>
       </div>
     </div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-label">위에 없는 아이디어가 있다면</div>
+    <textarea class="q-input" name="concept_other" rows="2" placeholder="노래방? 등산? 뭐든 던져보세요"></textarea>
   </div>
 
   <div class="q-block">
@@ -224,30 +275,8 @@ footer { background:var(--ink); padding:40px 80px; display:flex; justify-content
 
   <div class="q-block">
     <div class="q-label">이것만은 하지 말자</div>
-    <div class="q-hint">솔직하게. 이게 제일 중요합니다.</div>
-    <textarea class="q-input" name="must_not" rows="2" placeholder="제발 이건 안 했으면..."></textarea>
-  </div>
-
-  <div class="q-block">
-    <div class="q-label q-required">참여 가능 시간대</div>
-    <div class="opt-grid">
-      <div class="opt-card">
-        <input type="radio" name="time" id="t1" value="1시~4시" required>
-        <label for="t1"><span class="opt-emoji">🌤</span> 오후 1시 ~ 4시 (낮)</label>
-      </div>
-      <div class="opt-card">
-        <input type="radio" name="time" id="t2" value="4시~8시">
-        <label for="t2"><span class="opt-emoji">🌇</span> 오후 4시 ~ 8시 (저녁)</label>
-      </div>
-      <div class="opt-card">
-        <input type="radio" name="time" id="t3" value="종일">
-        <label for="t3"><span class="opt-emoji">💪</span> 종일 (1시 ~ 8시)</label>
-      </div>
-      <div class="opt-card">
-        <input type="radio" name="time" id="t4" value="아직 모름">
-        <label for="t4"><span class="opt-emoji">🤔</span> 아직 모르겠다</label>
-      </div>
-    </div>
+    <div class="q-hint">솔직하게. 사실 이게 제일 중요한 질문입니다.</div>
+    <textarea class="q-input" name="must_not" rows="2" placeholder="이것만큼은 제발..."></textarea>
   </div>
 </div>
 
@@ -257,7 +286,7 @@ footer { background:var(--ink); padding:40px 80px; display:flex; justify-content
     <div class="sec-num">02</div>
     <div class="sec-title">후원 목표</div>
   </div>
-  <div class="sec-desc">목표가 있어야 움직입니다. 현실적으로 가봅시다.</div>
+  <div class="sec-desc">목표 없이 "열심히 하자"는 3년째 해봤잖아요. 숫자를 정합시다.</div>
 
   <div class="q-block">
     <div class="q-label q-required">후원 목표를 어떤 기준으로 잡으면 좋을까요?</div>
@@ -284,17 +313,17 @@ footer { background:var(--ink); padding:40px 80px; display:flex; justify-content
   <div class="q-block">
     <div class="q-label">현실적으로 가능하다고 생각하는 목표는?</div>
     <div class="q-hint">예: "정기후원자 50명", "연간 500만원", "파티 당일 200만원" 등</div>
-    <textarea class="q-input" name="goal_realistic" rows="2" placeholder="감으로라도"></textarea>
+    <textarea class="q-input" name="goal_realistic" rows="2" placeholder="감으로라도 찍어주세요. 틀려도 됩니다."></textarea>
   </div>
 
   <div class="q-block">
     <div class="q-label q-required">본인이 직접 후원자를 연결할 수 있는 사람 수는?</div>
-    <div class="q-hint">부담 없이 솔직하게. 0명도 괜찮습니다.</div>
+    <div class="q-hint">0명은 안 됩니다. (농담 아님) (농담임) (반은 진심)</div>
     <div class="q-range-wrap">
       <div class="q-range-num" id="rangeVal">0</div>
       <div style="flex:1">
         <input type="range" class="q-range" name="recruit_num" min="0" max="20" value="0" id="recruitRange">
-        <div class="q-range-label"><span>0명</span><span>10명</span><span>20명+</span></div>
+        <div class="q-range-label"><span>0명 🥲</span><span>10명 😎</span><span>20명+ 🫡</span></div>
       </div>
     </div>
   </div>
@@ -306,25 +335,28 @@ footer { background:var(--ink); padding:40px 80px; display:flex; justify-content
     <div class="sec-num">03</div>
     <div class="sec-title">본인 역할</div>
   </div>
-  <div class="sec-desc">할 수 있는 것만 골라주세요. 안 고르셔도 됩니다. (대신 제가 배정합니다 😊)</div>
+  <div class="sec-desc">할 수 있는 것만 골라주세요. 안 고르셔도 됩니다. (대신 제가 배정합니다 😊)<br>하나만 하는 게 아니라 다양하게 부여됩니다. 본인 재능 확인용!</div>
 
   <div class="q-block">
-    <div class="q-label">파티 준비에서 할 수 있는 역할</div>
-    <div class="q-hint">복수 선택 가능</div>
+    <div class="q-label">자신 있는 역할</div>
+    <div class="q-hint">복수 선택</div>
     <div class="opt-grid">
       <div class="opt-card"><input type="checkbox" name="role" id="r1" value="공연"><label for="r1"><span class="opt-emoji">🎤</span> 공연 / 퍼포먼스 출연</label></div>
       <div class="opt-card"><input type="checkbox" name="role" id="r2" value="장소"><label for="r2"><span class="opt-emoji">📍</span> 장소 섭외 · 추천</label></div>
       <div class="opt-card"><input type="checkbox" name="role" id="r3" value="홍보"><label for="r3"><span class="opt-emoji">📢</span> 홍보 / SNS 공유</label></div>
-      <div class="opt-card"><input type="checkbox" name="role" id="r4" value="현장운영"><label for="r4"><span class="opt-emoji">🏃</span> 당일 현장 운영</label></div>
+      <div class="opt-card"><input type="checkbox" name="role" id="r4" value="현장운영"><label for="r4"><span class="opt-emoji">🏃</span> 당일 현장 운영 · 진행</label></div>
       <div class="opt-card"><input type="checkbox" name="role" id="r5" value="음식"><label for="r5"><span class="opt-emoji">🍱</span> 케이터링 / 음식</label></div>
       <div class="opt-card"><input type="checkbox" name="role" id="r6" value="기록"><label for="r6"><span class="opt-emoji">📸</span> 영상 / 사진 기록</label></div>
       <div class="opt-card"><input type="checkbox" name="role" id="r7" value="후원자모집"><label for="r7"><span class="opt-emoji">🤝</span> 후원자 모집 (지인 연결)</label></div>
+      <div class="opt-card"><input type="checkbox" name="role" id="r8" value="기획"><label for="r8"><span class="opt-emoji">🧠</span> 기획 / 아이디어</label></div>
+      <div class="opt-card"><input type="checkbox" name="role" id="r9" value="디자인"><label for="r9"><span class="opt-emoji">🎨</span> 디자인 / 꾸미기</label></div>
+      <div class="opt-card"><input type="checkbox" name="role" id="r10" value="섭외"><label for="r10"><span class="opt-emoji">📞</span> 외부 인사 섭외 · 연결</label></div>
     </div>
   </div>
 
   <div class="q-block">
-    <div class="q-label">이 외에 이런 것도 할 수 있다!</div>
-    <textarea class="q-input" name="role_etc" rows="2" placeholder="숨은 재능, 인맥, 아이디어 뭐든"></textarea>
+    <div class="q-label">위에 없는 나만의 재능이 있다면</div>
+    <textarea class="q-input" name="role_etc" rows="2" placeholder="요리 잘함, 트럭 있음, 연예인 친구 있음 등"></textarea>
   </div>
 </div>
 
@@ -332,11 +364,11 @@ footer { background:var(--ink); padding:40px 80px; display:flex; justify-content
 <div class="sv-section" data-section="4">
   <div class="sec-head">
     <div class="sec-num">04</div>
-    <div class="sec-title">홈페이지 피드백</div>
+    <div class="sec-title">홈페이지</div>
   </div>
   <div class="sec-desc">
-    홈페이지 만들었습니다. 먼저 한번 봐주세요.<br>
-    <a href="index.html" target="_blank" style="color:var(--sage); font-weight:700; text-decoration:underline;">블랙리스트 이후 홈페이지 보러가기 →</a>
+    홈페이지 만들었습니다. 안 보시면 서운합니다.<br>
+    <a href="index.html" target="_blank" style="color:var(--sage); font-weight:700; text-decoration:underline;">홈페이지 보러가기 →</a>
   </div>
 
   <div class="q-block">
@@ -354,29 +386,27 @@ footer { background:var(--ink); padding:40px 80px; display:flex; justify-content
   </div>
 
   <div class="q-block">
-    <div class="q-label">내용 중 수정이 필요한 부분</div>
-    <div class="q-hint">사실 오류, 빠진 내용, 어색한 표현 등</div>
-    <textarea class="q-input" name="site_fix" rows="2" placeholder="이거 틀렸어요 / 이거 빠졌어요"></textarea>
+    <div class="q-label q-required">이대로 오픈할까요?</div>
+    <div class="q-hint">오픈 = 도메인(post-blacklist.com) 등록하고 공식 운영 시작</div>
+    <div class="opt-grid">
+      <div class="opt-card">
+        <input type="radio" name="site_launch" id="l1" value="오픈하자" required>
+        <label for="l1"><span class="opt-emoji">🚀</span> 오픈하자</label>
+      </div>
+      <div class="opt-card">
+        <input type="radio" name="site_launch" id="l2" value="수정 후 오픈">
+        <label for="l2"><span class="opt-emoji">🔧</span> 수정할 게 있다 (아래에 적어주세요)</label>
+      </div>
+      <div class="opt-card">
+        <input type="radio" name="site_launch" id="l3" value="보류">
+        <label for="l3"><span class="opt-emoji">⏸️</span> 보류</label>
+      </div>
+    </div>
   </div>
 
   <div class="q-block">
-    <div class="q-label">아카이빙 페이지에 올릴 검열 사례가 있으면</div>
-    <div class="q-hint">간단하게라도. 본인 경험이 아니어도 됩니다.</div>
-    <textarea class="q-input" name="archive_case" rows="3" placeholder="선택사항 — 있으면 적어주세요"></textarea>
-  </div>
-</div>
-
-<!-- PART 5: 마지막 -->
-<div class="sv-section" data-section="5">
-  <div class="sec-head">
-    <div class="sec-num">05</div>
-    <div class="sec-title">마지막</div>
-  </div>
-
-  <div class="q-block">
-    <div class="q-label">블랙리스트 이후에 하고 싶은 한마디</div>
-    <div class="q-hint">불만, 기대, 농담, 뭐든 됩니다.</div>
-    <textarea class="q-input" name="last_word" rows="3" placeholder="진심이든 농담이든"></textarea>
+    <div class="q-label">수정 의견이 있다면</div>
+    <textarea class="q-input" name="site_opinion" rows="3" placeholder="이 부분은 좀... / 여기가 이상해요 / 오타 발견"></textarea>
   </div>
 </div>
 
@@ -392,8 +422,8 @@ footer { background:var(--ink); padding:40px 80px; display:flex; justify-content
 <!-- DONE -->
 <div class="done-screen" id="doneScreen">
   <div class="done-emoji">🎊</div>
-  <div class="done-title">고맙습니다!</div>
-  <div class="done-desc">전원 답변이 오면 바로 다음 단계로 갑니다.<br>홈페이지 아직 안 보셨으면 지금 구경해주세요.</div>
+  <div class="done-title">수고했습니다!</div>
+  <div class="done-desc">5분도 안 걸렸죠? 감사합니다.<br>이제 진짜 일이 시작됩니다. 각오하세요.<br>홈페이지 아직 안 보셨으면 지금이라도.</div>
   <a href="index.html" class="done-link">홈페이지 구경하기 →</a>
 </div>
 
@@ -403,74 +433,82 @@ footer { background:var(--ink); padding:40px 80px; display:flex; justify-content
 </footer>
 
 <script>
-// Progress bar
+// Progress
 const pbar = document.getElementById('pbar');
 function updateProgress() {
-  const scrollTop = window.scrollY;
-  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-  const pct = docHeight > 0 ? Math.min((scrollTop / docHeight) * 100, 100) : 0;
-  pbar.style.width = pct + '%';
+  const s = window.scrollY, d = document.documentElement.scrollHeight - window.innerHeight;
+  pbar.style.width = (d > 0 ? Math.min(s/d*100,100) : 0) + '%';
 }
-window.addEventListener('scroll', updateProgress, { passive: true });
+window.addEventListener('scroll', updateProgress, { passive:true });
 
-// Scroll reveal
-const sections = document.querySelectorAll('.sv-section');
+// Reveal
 const obs = new IntersectionObserver(es => es.forEach(e => {
-  if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
-}), { threshold: 0.15 });
-sections.forEach(el => obs.observe(el));
+  if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); }
+}), { threshold:0.15 });
+document.querySelectorAll('.sv-section').forEach(el => obs.observe(el));
 
-// Range slider
+// Range
 const range = document.getElementById('recruitRange');
 const rangeVal = document.getElementById('rangeVal');
 range.addEventListener('input', () => {
-  const v = range.value;
-  rangeVal.textContent = v >= 20 ? '20+' : v;
+  rangeVal.textContent = range.value >= 20 ? '20+' : range.value;
 });
+
+// Google Sheets Apps Script URL — 배포 후 여기에 URL 붙여넣기
+const SHEET_URL = '';  // ← Apps Script 웹 앱 URL
 
 // Submit
 document.getElementById('surveyForm').addEventListener('submit', function(e) {
   e.preventDefault();
-
   const fd = new FormData(this);
   const data = {};
-  fd.forEach((val, key) => {
-    if (data[key]) {
-      data[key] = Array.isArray(data[key]) ? [...data[key], val] : [data[key], val];
-    } else {
-      data[key] = val;
-    }
+  fd.forEach((v,k) => {
+    if(data[k]) data[k] = Array.isArray(data[k]) ? [...data[k],v] : [data[k],v];
+    else data[k] = v;
   });
-
-  // localStorage 저장
-  const responses = JSON.parse(localStorage.getItem('bl_survey') || '[]');
   data.timestamp = new Date().toISOString();
-  responses.push(data);
-  localStorage.setItem('bl_survey', JSON.stringify(responses));
 
-  // Done 화면
-  document.getElementById('formWrap').style.display = 'none';
-  document.getElementById('footerEl').style.display = 'none';
-  const done = document.getElementById('doneScreen');
-  done.classList.add('show');
-
-  // Confetti
-  const colors = ['#C8962A', '#4E876A', '#C47B72', '#7BA8C4', '#8B80B8'];
-  for (let i = 0; i < 60; i++) {
-    const c = document.createElement('div');
-    c.className = 'confetti';
-    c.style.left = Math.random() * 100 + 'vw';
-    c.style.width = (6 + Math.random() * 8) + 'px';
-    c.style.height = (6 + Math.random() * 8) + 'px';
-    c.style.background = colors[Math.floor(Math.random() * colors.length)];
-    c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
-    c.style.animationDuration = (2 + Math.random() * 3) + 's';
-    c.style.animationDelay = (Math.random() * 1.5) + 's';
-    document.body.appendChild(c);
-    setTimeout(() => c.remove(), 6000);
+  // Google Sheets 전송
+  if (SHEET_URL) {
+    const btn = document.querySelector('.submit-btn');
+    btn.textContent = '전송 중...';
+    btn.disabled = true;
+    fetch(SHEET_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }).then(() => showDone()).catch(() => showDone());
+  } else {
+    // 백업: localStorage
+    const res = JSON.parse(localStorage.getItem('bl_survey')||'[]');
+    res.push(data);
+    localStorage.setItem('bl_survey', JSON.stringify(res));
+    showDone();
   }
 
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  function showDone() {
+  document.getElementById('formWrap').style.display = 'none';
+  document.getElementById('footerEl').style.display = 'none';
+  document.getElementById('doneScreen').classList.add('show');
+
+  // Confetti
+  const colors = ['#C8962A','#4E876A','#C47B72','#7BA8C4','#8B80B8'];
+  for(let i=0;i<60;i++){
+    const c = document.createElement('div');
+    c.className='confetti';
+    c.style.left=Math.random()*100+'vw';
+    c.style.width=(6+Math.random()*8)+'px';
+    c.style.height=(6+Math.random()*8)+'px';
+    c.style.background=colors[Math.floor(Math.random()*colors.length)];
+    c.style.borderRadius=Math.random()>0.5?'50%':'2px';
+    c.style.animationDuration=(2+Math.random()*3)+'s';
+    c.style.animationDelay=(Math.random()*1.5)+'s';
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),6000);
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+  } // showDone 끝
 });
 </script>
 </body>
