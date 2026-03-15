@@ -16,3 +16,6 @@ social_kkottjanchi_translucent_ink_wisps_flowing_on_cream_background_515e452a-a8
 
 # PDF (개인 문서)
 *.pdf
+
+# 기획/디자인 기록 — 로컬 전용, GitHub 비공개
+_디자인기록.md
