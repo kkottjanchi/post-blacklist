@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>블랙리스트 이후 — POST BLACKLIST</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/* ── RESET ── */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; font-size:16px; }
+body { font-family:'Pretendard', sans-serif; background:#F7F3EC; color:#1E1E1E; overflow-x:hidden; }
+
+/* ── TOKENS ── */
+:root {
+  --bg: #F7F3EC;
+  --dark: #0F180F;
+  --text: #1E1E1E;
+  --warm: #C8633A;   /* 테라코타 — 따뜻한 저항 */
+  --sage: #7BAF7B;   /* 세이지 — 살아있음 */
+  --amber: #D4A05A;  /* 앰버 — 지속, 온기 */
+  --muted: rgba(30,30,30,0.5);
+}
+
+/* ── FONT SIZE TOGGLE ── */
+.size-ctrl {
+  position:fixed; bottom:24px; right:24px; z-index:400;
+  display:flex; flex-direction:column; gap:6px;
+}
+.size-btn {
+  width:44px; height:44px; border-radius:50%;
+  background:var(--bg); border:1.5px solid rgba(0,0,0,0.12);
+  cursor:pointer; font-size:14px; font-weight:800;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 2px 12px rgba(0,0,0,0.1);
+  transition:background 0.15s;
+  font-family:'Space Grotesk', sans-serif;
+}
+.size-btn:hover { background:#eee; }
+
+/* ── NAV ── */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:200;
+  padding:22px 60px;
+  display:flex; justify-content:space-between; align-items:center;
+  transition:background 0.4s, padding 0.3s, border-color 0.4s;
+  border-bottom:1px solid transparent;
+}
+nav.scrolled {
+  background:rgba(247,243,236,0.96);
+  backdrop-filter:blur(16px);
+  padding:14px 60px;
+  border-bottom-color:rgba(0,0,0,0.06);
+}
+.nav-logo {
+  font-family:'Pretendard', sans-serif; font-weight:900;
+  font-size:16px; letter-spacing:0.03em; color:rgba(255,255,255,0.9);
+  transition:color 0.4s;
+}
+nav.scrolled .nav-logo { color:var(--text); }
+.nav-links { display:flex; gap:32px; list-style:none; align-items:center; }
+.nav-links a {
+  color:rgba(255,255,255,0.6); text-decoration:none;
+  font-family:'Space Grotesk', sans-serif;
+  font-size:13px; letter-spacing:0.07em;
+  transition:color 0.2s;
+}
+nav.scrolled .nav-links a { color:rgba(30,30,30,0.55); }
+.nav-links a:hover, nav.scrolled .nav-links a:hover { color:var(--warm); }
+.btn-nav-support {
+  background:var(--warm) !important; color:white !important;
+  padding:10px 24px; font-weight:700 !important;
+  font-size:12px !important; letter-spacing:0.14em !important;
+  transition:opacity 0.2s !important;
+}
+.btn-nav-support:hover { opacity:0.82 !important; }
+
+/* ── HERO ── */
+.hero {
+  position:relative; height:100vh; min-height:640px;
+  background:var(--dark);
+  display:flex; align-items:center; justify-content:center;
+  overflow:hidden;
+}
+
+/* 이름들 배경 */
+.names-bg {
+  position:absolute; inset:0;
+  display:flex; flex-wrap:wrap;
+  align-content:flex-start;
+  padding:80px 60px;
+  gap:10px 24px;
+  opacity:0.14; pointer-events:none; overflow:hidden;
+}
+.names-bg span {
+  font-family:'Pretendard', sans-serif;
+  font-size:clamp(10px, 1.1vw, 14px);
+  color:white; font-weight:400;
+  opacity:0;
+  animation:nameIn 4s ease-out forwards;
+}
+@keyframes nameIn { from{opacity:0} to{opacity:1} }
+
+/* 히어로 */
+.hero-inner {
+  position:relative; z-index:2;
+  text-align:center; padding:0 40px;
+}
+.hero-pre {
+  font-family:'Space Grotesk', sans-serif;
+  font-size:11px; letter-spacing:0.65em; text-transform:uppercase;
+  color:rgba(255,255,255,0.35); margin-bottom:20px;
+  opacity:0; animation:fadeUp 0.8s 0.4s forwards;
+}
+.hero-title-wrap { position:relative; display:inline-block; }
+.hero-behind {
+  position:absolute; top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  font-family:'Space Grotesk', sans-serif;
+  font-size:clamp(16px, 2vw, 24px);
+  letter-spacing:0.55em; text-transform:uppercase;
+  color:rgba(255,255,255,0.06);
+  white-space:nowrap; pointer-events:none; z-index:0;
+}
+.hero-main {
+  display:block;
+  font-family:'Pretendard', sans-serif; font-weight:900;
+  font-size:clamp(110px, 22vw, 280px);
+  line-height:0.82; letter-spacing:-0.04em;
+  color:var(--warm);
+  position:relative; z-index:1;
+  opacity:0;
+  animation:heroIn 1.4s cubic-bezier(0.16,1,0.3,1) 0.6s forwards;
+}
+@keyframes heroIn {
+  from { opacity:0; transform:translateY(50px) scale(0.94); }
+  to   { opacity:1; transform:none; }
+}
+.hero-sub {
+  margin-top:32px;
+  font-size:clamp(14px, 1.8vw, 17px);
+  color:rgba(255,255,255,0.45); line-height:2;
+  opacity:0; animation:fadeUp 0.8s 1.1s forwards;
+}
+.hero-btns {
+  margin-top:52px;
+  display:flex; gap:14px; justify-content:center; flex-wrap:wrap;
+  opacity:0; animation:fadeUp 0.8s 1.3s forwards;
+}
+.btn-primary {
+  background:var(--warm); color:white;
+  padding:18px 52px;
+  font-family:'Space Grotesk', sans-serif;
+  font-size:13px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase;
+  text-decoration:none; display:inline-block;
+  transition:opacity 0.2s, transform 0.2s;
+}
+.btn-primary:hover { opacity:0.83; transform:translateY(-2px); }
+.btn-ghost {
+  background:transparent; color:rgba(255,255,255,0.65);
+  padding:17px 52px;
+  font-family:'Space Grotesk', sans-serif;
+  font-size:13px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase;
+  text-decoration:none; display:inline-block;
+  border:1.5px solid rgba(255,255,255,0.22);
+  transition:border-color 0.2s, color 0.2s, transform 0.2s;
+}
+.btn-ghost:hover { border-color:rgba(255,255,255,0.55); color:white; transform:translateY(-2px); }
+.scroll-hint {
+  position:absolute; bottom:32px; left:50%; transform:translateX(-50%);
+  display:flex; flex-direction:column; align-items:center; gap:10px;
+  opacity:0; animation:fadeUp 1s 2.2s forwards;
+}
+.scroll-hint span {
+  font-family:'Space Grotesk', sans-serif;
+  font-size:9px; letter-spacing:0.45em;
+  color:rgba(255,255,255,0.25); text-transform:uppercase;
+}
+.scroll-line {
+  width:1px; height:44px;
+  background:linear-gradient(to bottom, rgba(200,99,58,0.6), transparent);
+  animation:pulse 2s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:0.3} 50%{opacity:1} }
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(14px); }
+  to   { opacity:1; transform:none; }
+}
+
+/* ── MARQUEE ── */
+.marquee-wrap { background:var(--warm); padding:13px 0; overflow:hidden; white-space:nowrap; }
+.marquee-track { display:inline-flex; animation:scroll 22s linear infinite; }
+.marquee-track span {
+  font-family:'Space Grotesk', sans-serif;
+  font-size:11px; letter-spacing:0.38em; text-transform:uppercase;
+  color:rgba(255,255,255,0.9); font-weight:700; padding:0 28px;
+}
+.marquee-track .sep { color:rgba(255,255,255,0.35); padding:0 4px; }
+@keyframes scroll { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+/* ── SECTION BASE ── */
+.sec { padding:120px 80px; }
+.sec-label {
+  font-family:'Space Grotesk', sans-serif;
+  font-size:10px; letter-spacing:0.55em; text-transform:uppercase;
+  color:var(--warm); font-weight:700;
+  display:flex; align-items:center; gap:14px;
+  margin-bottom:64px;
+}
+.sec-label::before { content:''; width:20px; height:1.5px; background:var(--warm); }
+
+/* ── ABOUT ── */
+.about-sec { background:var(--bg); }
+.about-grid { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; }
+.about-title {
+  font-family:'Pretendard', sans-serif; font-weight:900;
+  font-size:clamp(40px, 5vw, 62px);
+  line-height:1.05; letter-spacing:-0.03em; margin-bottom:32px;
+}
+.about-title em { color:var(--warm); font-style:normal; }
+.about-text {
+  font-size:17px; line-height:2.2;
+  color:rgba(30,30,30,0.65); margin-bottom:0;
+}
+.missions { display:flex; flex-direction:column; }
+.mission {
+  padding:22px 0; border-top:1px solid rgba(0,0,0,0.08);
+  display:flex; gap:20px; align-items:flex-start;
+  transition:padding-left 0.25s;
+}
+.mission:hover { padding-left:8px; }
+.m-n { font-family:'Space Grotesk', sans-serif; font-size:10px; color:var(--warm); font-weight:700; letter-spacing:0.2em; min-width:28px; padding-top:4px; }
+.m-t { font-size:16px; line-height:1.85; }
+.stats-row {
+  display:grid; grid-template-columns:repeat(4,1fr);
+  margin-top:88px;
+  border-top:1px solid rgba(0,0,0,0.08);
+}
+.stat { padding:52px 32px; border-right:1px solid rgba(0,0,0,0.08); }
+.stat:last-child { border-right:none; }
+.s-num {
+  font-family:'Pretendard', sans-serif; font-weight:900;
+  font-size:clamp(44px, 5vw, 68px);
+  line-height:1; letter-spacing:-0.04em;
+  color:var(--warm); margin-bottom:12px;
+}
+.s-label { font-size:14px; color:var(--muted); line-height:1.75; }
+
+/* ── TIMELINE ── */
+.timeline-sec { background:#EDE8DF; }
+.tl-list { display:flex; flex-direction:column; }
+.tl-item {
+  display:grid; grid-template-columns:100px 1fr;
+  gap:48px; padding:32px 0;
+  border-bottom:1px solid rgba(0,0,0,0.07);
+  align-items:start;
+}
+.tl-year {
+  font-family:'Space Grotesk', sans-serif;
+  font-weight:700; font-size:12px; letter-spacing:0.1em;
+  color:var(--warm); padding-top:4px;
+}
+.tl-h { font-size:17px; font-weight:700; margin-bottom:8px; line-height:1.4; }
+.tl-p { font-size:15px; color:var(--muted); line-height:1.9; }
+
+/* ── SUPPORT ── */
+.support-sec { background:var(--dark); text-align:center; }
+.support-label {
+  font-family:'Space Grotesk', sans-serif;
+  font-size:10px; letter-spacing:0.55em; text-transform:uppercase;
+  color:var(--warm); font-weight:700;
+  display:flex; align-items:center; justify-content:center; gap:14px;
+  margin-bottom:64px;
+}
+.support-label::before, .support-label::after { content:''; width:20px; height:1.5px; background:var(--warm); }
+.support-title {
+  font-family:'Pretendard', sans-serif; font-weight:900;
+  font-size:clamp(36px, 5vw, 58px);
+  line-height:1.1; color:white; margin-bottom:20px;
+  letter-spacing:-0.02em;
+}
+.support-title em { color:var(--warm); font-style:normal; }
+.support-desc {
+  font-size:17px; color:rgba(255,255,255,0.45);
+  line-height:2.1; max-width:500px; margin:0 auto 60px;
+}
+.support-cards { display:flex; gap:20px; justify-content:center; flex-wrap:wrap; margin-bottom:52px; }
+.s-card {
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.09);
+  padding:36px 44px; text-align:left; min-width:210px;
+  transition:background 0.2s;
+}
+.s-card:hover { background:rgba(255,255,255,0.07); }
+.sc-tag {
+  font-family:'Space Grotesk', sans-serif;
+  font-size:9px; letter-spacing:0.45em; text-transform:uppercase;
+  color:var(--warm); font-weight:700; margin-bottom:16px;
+}
+.sc-title { font-size:20px; font-weight:700; color:white; margin-bottom:8px; }
+.sc-desc { font-size:14px; color:rgba(255,255,255,0.35); line-height:1.8; }
+
+/* ── PARTY ── */
+.party-sec { background:var(--warm); }
+.party-inner { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; }
+.party-num {
+  font-family:'Pretendard', sans-serif; font-weight:900;
+  font-size:clamp(72px, 12vw, 150px);
+  line-height:0.82; letter-spacing:-0.04em;
+  color:rgba(0,0,0,0.1); margin-bottom:-12px;
+}
+.party-title {
+  font-family:'Pretendard', sans-serif; font-weight:900;
+  font-size:clamp(30px, 4vw, 50px);
+  line-height:1.1; color:white; margin-bottom:18px;
+}
+.party-desc { font-size:17px; color:rgba(255,255,255,0.72); line-height:2.1; }
+.party-info { display:flex; flex-direction:column; gap:24px; }
+.pi { display:flex; flex-direction:column; gap:5px; }
+.pi-l {
+  font-family:'Space Grotesk', sans-serif;
+  font-size:9px; letter-spacing:0.45em; text-transform:uppercase;
+  color:rgba(255,255,255,0.5); font-weight:700;
+}
+.pi-v { font-size:20px; font-weight:700; color:white; }
+.btn-white {
+  background:white; color:var(--warm);
+  padding:18px 52px;
+  font-family:'Space Grotesk', sans-serif;
+  font-size:13px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase;
+  text-decoration:none; display:inline-block;
+  margin-top:16px;
+  transition:opacity 0.2s, transform 0.2s;
+}
+.btn-white:hover { opacity:0.88; transform:translateY(-2px); }
+
+/* ── FOOTER ── */
+footer {
+  background:var(--dark); padding:60px 80px;
+  display:flex; justify-content:space-between; align-items:flex-end;
+  border-top:1px solid rgba(255,255,255,0.04);
+}
+.f-logo { font-family:'Pretendard', sans-serif; font-weight:900; font-size:22px; color:white; margin-bottom:8px; }
+.f-logo em { color:var(--warm); font-style:normal; }
+.f-tag { font-size:12px; color:rgba(255,255,255,0.3); font-family:'Space Grotesk', sans-serif; letter-spacing:0.05em; }
+.f-links { display:flex; gap:24px; }
+.f-links a { color:rgba(255,255,255,0.35); text-decoration:none; font-family:'Space Grotesk', sans-serif; font-size:13px; letter-spacing:0.05em; transition:color 0.2s; }
+.f-links a:hover { color:white; }
+.f-copy { font-family:'Space Grotesk', sans-serif; font-size:11px; color:rgba(255,255,255,0.2); text-align:right; letter-spacing:0.1em; }
+
+/* ── REVEAL ── */
+.rv { opacity:0; transform:translateY(22px); transition:opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1); }
+.rv.on { opacity:1; transform:none; }
+.d1{transition-delay:.1s} .d2{transition-delay:.2s} .d3{transition-delay:.3s} .d4{transition-delay:.4s}
+
+/* ── MOBILE ── */
+@media(max-width:768px){
+  nav { padding:16px 20px; }
+  nav.scrolled { padding:12px 20px; }
+  .nav-links li:not(:last-child) { display:none; }
+  .nav-logo { font-size:14px; }
+
+  .hero-main { font-size:clamp(80px, 26vw, 130px); }
+  .hero-sub { font-size:14px; }
+  .hero-btns { flex-direction:column; align-items:center; }
+  .btn-primary, .btn-ghost { width:100%; max-width:280px; text-align:center; padding:18px 32px; }
+  .names-bg { padding:80px 20px; gap:6px 14px; }
+
+  .sec { padding:72px 24px; }
+  .about-grid { grid-template-columns:1fr; gap:48px; }
+  .stats-row { grid-template-columns:repeat(2,1fr); }
+  .stat { padding:36px 20px; border-right:none; border-bottom:1px solid rgba(0,0,0,0.07); }
+  .tl-item { grid-template-columns:72px 1fr; gap:20px; padding:28px 0; }
+  .party-inner { grid-template-columns:1fr; gap:40px; }
+  footer { flex-direction:column; gap:28px; align-items:flex-start; padding:40px 24px; }
+  .f-copy { text-align:left; }
+  .size-ctrl { bottom:80px; right:16px; }
+}
+@media(min-width:769px) and (max-width:1024px){
+  .sec { padding:80px 48px; }
+  .about-grid { grid-template-columns:1fr; gap:56px; }
+  .stats-row { grid-template-columns:repeat(2,1fr); }
+  .stat { border-right:none; border-bottom:1px solid rgba(0,0,0,0.07); }
+  .party-inner { grid-template-columns:1fr; gap:48px; }
+}
+</style>
+</head>
+<body>
+
+<!-- 글자 크기 조절 -->
+<div class="size-ctrl">
+  <button class="size-btn" onclick="changeSize(1)">A+</button>
+  <button class="size-btn" onclick="changeSize(-1)">A−</button>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo">블랙리스트 이후</div>
+  <ul class="nav-links">
+    <li><a href="#about">소개</a></li>
+    <li><a href="#timeline">활동</a></li>
+    <li><a href="#party">후원파티</a></li>
+    <li><a href="https://view.hyosungcms.co.kr/simple-agreement/payer-regist" target="_blank" class="btn-nav-support">후원하기</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="names-bg" id="namesBg"></div>
+  <div class="hero-inner">
+    <div class="hero-pre">POST BLACKLIST · 2017 — NOW</div>
+    <div class="hero-title-wrap">
+      <div class="hero-behind">BLACKLIST</div>
+      <span class="hero-main">이후</span>
+    </div>
+    <p class="hero-sub">
+      9473명의 이름이 지워진 자리에서<br>
+      우리는 계속 만들어간다
+    </p>
+    <div class="hero-btns">
+      <a href="https://view.hyosungcms.co.kr/simple-agreement/payer-regist" target="_blank" class="btn-primary">후원하기</a>
+      <a href="#party" class="btn-ghost">후원파티 04.25 →</a>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span>scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span>끝까지 싸워라</span><span class="sep">·</span>
+    <span>사랑스럽고 다정하게</span><span class="sep">·</span>
+    <span>Fight to the end</span><span class="sep">·</span>
+    <span>Lovingly & Tenderly</span><span class="sep">·</span>
+    <span>이후를 만든다</span><span class="sep">·</span>
+    <span>POST BLACKLIST</span><span class="sep">·</span>
+    <span>끝까지 싸워라</span><span class="sep">·</span>
+    <span>사랑스럽고 다정하게</span><span class="sep">·</span>
+    <span>Fight to the end</span><span class="sep">·</span>
+    <span>Lovingly & Tenderly</span><span class="sep">·</span>
+    <span>이후를 만든다</span><span class="sep">·</span>
+    <span>POST BLACKLIST</span><span class="sep">·</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="about-sec sec" id="about">
+  <div class="sec-label rv">ABOUT</div>
+  <div class="about-grid">
+    <div>
+      <h2 class="about-title rv">
+        블랙리스트<br>
+        <em>이후</em>를<br>
+        만든다
+      </h2>
+      <p class="about-text rv d1">
+        블랙리스트는 끝나지 않았습니다.<br>
+        9473명의 예술인이 지워진 이후에도,<br>
+        새로운 형태의 검열은 계속됩니다.<br><br>
+        블랙리스트 이후는 그 기록을 추적하고,<br>
+        제도를 바꾸고, 다시는 반복되지 않는<br>
+        세상을 만들어가는 민간 전문 기구입니다.
+      </p>
+    </div>
+    <div class="missions rv d2">
+      <div class="mission">
+        <span class="m-n">01</span>
+        <span class="m-t">법·제도·정책 구조 개혁 — 다시는 반복되지 않는 시스템</span>
+      </div>
+      <div class="mission">
+        <span class="m-n">02</span>
+        <span class="m-t">미결 진상조사 — 블랙리스트 이후에도 계속된 검열의 기록</span>
+      </div>
+      <div class="mission">
+        <span class="m-n">03</span>
+        <span class="m-t">피해자 회복 — 당사자 중심, 지원과 연대</span>
+      </div>
+      <div class="mission">
+        <span class="m-n">04</span>
+        <span class="m-t">예술인 기본권 — 창작자가 존엄하게 살 수 있는 환경</span>
+      </div>
+    </div>
+  </div>
+  <div class="stats-row">
+    <div class="stat rv"><div class="s-num" data-t="9473">0</div><div class="s-label">블랙리스트<br>피해 예술인</div></div>
+    <div class="stat rv d1"><div class="s-num" data-t="9">0</div><div class="s-label">년간<br>활동 추적</div></div>
+    <div class="stat rv d2"><div class="s-num" data-t="40">0</div><div class="s-label">건 이상<br>피해 사례</div></div>
+    <div class="stat rv d3"><div class="s-num" data-t="23">0</div><div class="s-label">가해자<br>복귀 현황</div></div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section class="timeline-sec sec" id="timeline">
+  <div class="sec-label rv">TIMELINE</div>
+  <div class="tl-list">
+    <div class="tl-item rv">
+      <div class="tl-year">2017</div>
+      <div class="tl-content">
+        <div class="tl-h">블랙리스트 이후 발족</div>
+        <div class="tl-p">문화예술계 블랙리스트 피해 예술인들의 대응·연대 조직으로 출범. 9473명의 이름을 기억하는 것에서 시작.</div>
+      </div>
+    </div>
+    <div class="tl-item rv d1">
+      <div class="tl-year">2018–20</div>
+      <div class="tl-content">
+        <div class="tl-h">진상조사·법적 대응</div>
+        <div class="tl-p">피해 예술인 개별 사례 수집 및 법적 지원. 가해자 복귀 현황 모니터링 시작.</div>
+      </div>
+    </div>
+    <div class="tl-item rv d2">
+      <div class="tl-year">2021–23</div>
+      <div class="tl-content">
+        <div class="tl-h">제도 개혁·입법 활동</div>
+        <div class="tl-p">예술인권리보장법 개정 추진 참여. 문화예술계 블랙리스트 재발 방지 시스템 마련 요구.</div>
+      </div>
+    </div>
+    <div class="tl-item rv d3">
+      <div class="tl-year">2024–25</div>
+      <div class="tl-content">
+        <div class="tl-h">예술인권리보장법 전면 개정</div>
+        <div class="tl-p">이재명 정부 법 전면 개정 추진 참여. 피해자 회복 지원 체계 마련 논의.</div>
+      </div>
+    </div>
+    <div class="tl-item rv">
+      <div class="tl-year">2026</div>
+      <div class="tl-content">
+        <div class="tl-h">지금도, 이후에도</div>
+        <div class="tl-p">활동은 계속됩니다. 블랙리스트가 끝난 게 아니라, 이후를 만들어가는 중입니다.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SUPPORT -->
+<section class="support-sec sec" id="support">
+  <div class="support-label rv">SUPPORT</div>
+  <h2 class="support-title rv d1">함께<em>이어서</em><br>계속됩니다</h2>
+  <p class="support-desc rv d2">
+    블랙리스트 이후의 활동은<br>
+    여러분의 후원으로 이어집니다.<br>
+    사랑스럽고 다정하게, 끝까지.
+  </p>
+  <div class="support-cards rv d3">
+    <div class="s-card">
+      <div class="sc-tag">정기 후원</div>
+      <div class="sc-title">효성 CMS</div>
+      <div class="sc-desc">매월 자동 결제<br>언제든 변경·해지 가능</div>
+    </div>
+    <div class="s-card">
+      <div class="sc-tag">일시 후원</div>
+      <div class="sc-title">계좌이체</div>
+      <div class="sc-desc">준비 중<br>문의: 블랙리스트 이후</div>
+    </div>
+  </div>
+  <div class="rv d4">
+    <a href="https://view.hyosungcms.co.kr/simple-agreement/payer-regist" target="_blank" class="btn-primary" style="padding:20px 72px;font-size:14px;">
+      지금 후원하기 →
+    </a>
+  </div>
+</section>
+
+<!-- PARTY -->
+<section class="party-sec sec" id="party">
+  <div class="party-inner">
+    <div>
+      <div class="party-num rv">04<br>25</div>
+      <h3 class="party-title rv d1">블랙리스트 이후<br>후원 파티</h3>
+      <p class="party-desc rv d2">함께여서 계속됩니다.<br>모이고, 나누고, 이어가는 밤.<br>예술인, 활동가, 시민 누구나.</p>
+    </div>
+    <div class="party-info rv d2">
+      <div class="pi">
+        <span class="pi-l">DATE</span>
+        <span class="pi-v">2026년 4월 25일 토요일</span>
+      </div>
+      <div class="pi">
+        <span class="pi-l">LOCATION</span>
+        <span class="pi-v">추후 공개</span>
+      </div>
+      <div class="pi">
+        <span class="pi-l">ORGANIZER</span>
+        <span class="pi-v">블랙리스트 이후</span>
+      </div>
+      <a href="https://view.hyosungcms.co.kr/simple-agreement/payer-regist" target="_blank" class="btn-white">
+        후원하고 함께하기 →
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="f-logo">블랙리스트<em>이후</em></div>
+    <div class="f-tag">표현의 자유를 위한 민간 전문 기구 · 2017 — NOW</div>
+  </div>
+  <div class="f-links">
+    <a href="https://www.instagram.com/post_blacklist" target="_blank">Instagram</a>
+    <a href="https://www.facebook.com/profile.php?id=100089032202148" target="_blank">Facebook</a>
+    <a href="https://view.hyosungcms.co.kr/simple-agreement/payer-regist" target="_blank">후원하기</a>
+  </div>
+  <div class="f-copy">© 2026 블랙리스트 이후<br>POST BLACKLIST</div>
+</footer>
+
+<script>
+// NAV 스크롤
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 50);
+}, { passive:true });
+
+// 이름들 배경 생성
+const words = [
+  '예술인','작가','연출가','배우','시인','화가','감독','무용가','음악가',
+  '극작가','소설가','사진작가','안무가','성우','만화가','퍼포머','연구자',
+  'artist','writer','director','performer','poet','filmmaker',
+  '9473','이후','기억','연대','POST','표현의자유','기본권','회복','이름','존엄','계속',
+];
+const bg = document.getElementById('namesBg');
+for(let i = 0; i < 240; i++) {
+  const span = document.createElement('span');
+  span.textContent = words[i % words.length];
+  span.style.animationDelay = (Math.random() * 5).toFixed(2) + 's';
+  span.style.fontSize = (Math.random() * 6 + 9).toFixed(1) + 'px';
+  bg.appendChild(span);
+}
+
+// Scroll reveal
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('on'); obs.unobserve(e.target); }});
+}, { threshold: 0.1 });
+document.querySelectorAll('.rv').forEach(el => obs.observe(el));
+
+// Counter
+const cobs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(!e.isIntersecting) return;
+    const target = +e.target.dataset.t;
+    let cur = 0;
+    const step = Math.ceil(target / 60);
+    const suffix = target === 9 ? '년' : target > 100 ? '' : '+';
+    const t = setInterval(() => {
+      cur = Math.min(cur + step, target);
+      e.target.textContent = cur.toLocaleString() + suffix;
+      if(cur >= target) clearInterval(t);
+    }, 18);
+    cobs.unobserve(e.target);
+  });
+}, { threshold:0.5 });
+document.querySelectorAll('[data-t]').forEach(el => cobs.observe(el));
+
+// 글자 크기 조절
+let fs = 16;
+function changeSize(d) {
+  fs = Math.max(14, Math.min(22, fs + d * 2));
+  document.documentElement.style.fontSize = fs + 'px';
+}
+</script>
+</body>
+</html>
