@@ -273,9 +273,19 @@ footer { background:var(--ink); padding:56px 80px; display:flex; justify-content
   .sec { padding:72px 24px; }
   .bento { grid-template-columns:1fr; }
   .b-big { grid-column:1; padding:40px 28px; }
-  .b-txt { grid-column:1; }
+  .b-big h2 { font-size:clamp(32px, 10vw, 48px); }
+  .b-big-bg { font-size:100px; right:-10px; bottom:-20px; }
+  .b-txt { grid-column:1; padding:32px 24px; }
+  .b-txt p { font-size:14px; line-height:2; }
+  .b-m { padding:24px 20px; }
+  .b-st { padding:28px 24px; }
+  .bsn { font-size:clamp(36px, 10vw, 48px); }
   .tl-row { grid-template-columns:72px 1fr; gap:20px; padding:24px 0; }
   .party-grid { grid-template-columns:1fr; gap:40px; }
+  .party-big { font-size:clamp(60px, 18vw, 100px); }
+  .sup-cards { flex-direction:column; align-items:stretch; }
+  .sup-card { min-width:auto; padding:28px 24px; }
+  .mq-track span { font-size:9px; padding:0 14px; letter-spacing:0.3em; }
   footer { flex-direction:column; gap:28px; align-items:flex-start; padding:40px 24px; }
   .f-copy { text-align:left; }
   .size-ctrl { bottom:80px; right:16px; }

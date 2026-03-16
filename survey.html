@@ -149,11 +149,16 @@ footer { background:var(--ink); padding:40px 80px; display:flex; justify-content
 
 @media(max-width:768px){
   .sv-hero { padding:60px 24px 40px; min-height:40vh; }
+  .sv-hero-bg { font-size:clamp(80px, 22vw, 140px); right:-20px; }
+  .sv-title { font-size:clamp(28px, 8vw, 44px); }
+  .sv-sub { font-size:14px; }
+  .sv-timer { font-size:11px; padding:8px 14px; }
   .form-wrap { padding:40px 20px 80px; }
   .concept-grid { grid-template-columns:1fr 1fr; }
   .sec-desc { padding-left:0; }
   footer { flex-direction:column; gap:16px; padding:32px 24px; }
 }
+@media(max-width:480px){ .concept-grid { grid-template-columns:1fr; } }
 </style>
 </head>
 <body>
