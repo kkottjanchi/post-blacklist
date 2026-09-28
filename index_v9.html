@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>블랙리스트 이후 — POST BLACKLIST</title>
+<meta name="description" content="9473명의 이름이 지워진 자리에서, 우리는 계속 만들어간다. 표현의 자유를 위한 민간 전문 기구, 블랙리스트 이후.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@300;500;700;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<style>
+/* ─────────────────────────────────────────────
+   블랙리스트 이후 v9 — "먹칠이 걷히면 색이 돌아온다"
+   끝까지 싸워라 = 먹 / 사랑스럽고 다정하게 = 무지개 번짐
+   ───────────────────────────────────────────── */
+:root{
+  --paper:#EDDDB9;      /* 영상 바탕과 같은 종이색 */
+  --paper-2:#E5D2A8;
+  --paper-hi:#F5EAD2;
+  --ink:#17130E;        /* 먹 */
+  --ink-2:#3B342A;
+  --ink-soft:rgba(23,19,14,.62);
+  --rule:rgba(23,19,14,.22);
+  /* 무지개 — 영상에서 가져온 색 */
+  --r-mag:#E4247A; --r-org:#F47B20; --r-yel:#F4C92B; --r-grn:#4DB33D; --r-blu:#1B9AD6; --r-vio:#7B4BB3;
+  --rainbow:linear-gradient(90deg,var(--r-mag),var(--r-org),var(--r-yel),var(--r-grn),var(--r-blu),var(--r-vio));
+  --serif:'Hahmlet',serif;
+  --sans:'Pretendard',system-ui,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+  --gut:clamp(20px,5vw,72px);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{font-size:17px;scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.85;word-break:keep-all;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+img,video,svg{display:block;max-width:100%}
+::selection{background:var(--ink);color:var(--paper)}
+
+/* 종이결 */
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:90;opacity:.5;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .28 0 0 0 0 .18 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+.mono{font-family:var(--mono),var(--sans);font-size:.7rem;letter-spacing:.05em;text-transform:uppercase}
+
+/* ── 상단 ── */
+.top{position:fixed;inset:0 0 auto;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px var(--gut);transition:background .3s,box-shadow .3s}
+.top.on{background:rgba(237,221,185,.92);backdrop-filter:blur(10px);box-shadow:0 1px 0 var(--rule)}
+.logo{font-family:var(--serif);font-weight:900;font-size:1.05rem;letter-spacing:-.02em;text-decoration:none;display:flex;align-items:baseline;gap:.35em}
+.logo small{font-family:var(--mono);font-weight:400;font-size:.6rem;letter-spacing:.16em;color:var(--ink-soft)}
+.menu{display:flex;align-items:center;gap:clamp(14px,2.2vw,30px);list-style:none}
+.menu a{text-decoration:none;font-size:.82rem;font-weight:500;color:var(--ink-2);position:relative}
+.menu a:not(.seal-sm)::after{content:'';position:absolute;left:0;right:0;bottom:-3px;height:2px;background:var(--rainbow);transform:scaleX(0);transform-origin:left;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.menu a:not(.seal-sm):hover::after{transform:scaleX(1)}
+.seal-sm{background:var(--ink);color:var(--paper-hi)!important;padding:8px 16px;border-radius:999px;font-weight:700!important;letter-spacing:.02em}
+.seal-sm:hover{background:var(--r-mag)}
+.fs{display:flex;gap:4px}
+.fs button{font-family:var(--mono);font-size:.7rem;width:30px;height:30px;border:1px solid var(--rule);background:transparent;border-radius:50%;cursor:pointer;color:var(--ink-2)}
+.fs button:hover{background:var(--ink);color:var(--paper)}
+
+/* ── 1. 첫 화면 ── */
+.hero{min-height:100svh;display:grid;grid-template-rows:auto 1fr auto;padding:84px var(--gut) 28px;position:relative;overflow:hidden}
+.docline{display:flex;justify-content:space-between;gap:12px;border-top:1.5px solid var(--ink);border-bottom:1px solid var(--rule);padding:8px 0;color:var(--ink-2)}
+.hero-stage{position:relative;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);align-items:center;gap:clamp(12px,3vw,48px)}
+.hero-film{position:relative;aspect-ratio:1936/1080;width:112%;margin-left:-6%;
+  -webkit-mask-image:radial-gradient(ellipse 60% 62% at 50% 50%,#000 45%,transparent 92%);mask-image:radial-gradient(ellipse 60% 62% at 50% 50%,#000 45%,transparent 92%)}
+.hero-film video,.hero-film img{width:100%;height:100%;object-fit:cover;mix-blend-mode:darken;filter:saturate(1.08) contrast(1.02)}
+.hero-copy{position:relative;z-index:2}
+.big{font-family:var(--serif);font-weight:900;font-size:clamp(5.2rem,17vw,15rem);line-height:.8;letter-spacing:-.06em;display:flex;align-items:flex-end;gap:.04em}
+.big .strike{position:relative;color:var(--ink)}
+.big sup{font-family:var(--mono);font-weight:400;font-size:.62rem;letter-spacing:.14em;align-self:flex-start;margin-top:1.2em;color:var(--ink-soft);writing-mode:vertical-rl}
+.lede{margin-top:clamp(18px,3vw,34px);font-family:var(--serif);font-weight:500;font-size:clamp(1.25rem,2.4vw,1.85rem);line-height:1.55;letter-spacing:-.02em}
+.hero-foot{display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap;padding-top:18px}
+.motto{font-family:var(--serif);font-size:clamp(.95rem,1.4vw,1.1rem);font-weight:500;color:var(--ink-2)}
+.motto b{font-weight:900;color:var(--ink)}
+.motto i{font-style:normal;font-weight:500;position:relative;white-space:nowrap}
+.motto i::after{content:'';position:absolute;left:0;right:0;bottom:-.12em;height:.35em;z-index:-1;background:linear-gradient(90deg,var(--r-yel),var(--r-grn),var(--r-mag),var(--r-blu));filter:blur(4px);opacity:.5;border-radius:50%}
+.btns{display:flex;gap:10px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:.6em;padding:15px 26px;border-radius:999px;text-decoration:none;font-weight:700;font-size:.92rem;transition:transform .2s,background .2s,color .2s}
+.btn-ink{background:var(--ink);color:var(--paper-hi)}
+.btn-ink:hover{transform:translateY(-2px);background:var(--r-mag)}
+.btn-line{border:1.5px solid var(--ink)}
+.btn-line:hover{background:var(--ink);color:var(--paper-hi)}
+.scrollcue{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);color:var(--ink-soft)}
+
+/* ── 먹칠 (검열 → 복원) ── */
+.rd{position:relative;display:inline-block;white-space:nowrap;isolation:isolate}
+.rd::before{content:'';position:absolute;left:-.1em;right:-.1em;bottom:.02em;height:.42em;z-index:-1;border-radius:40% 55% 45% 60%/60% 50% 55% 45%;
+  background:linear-gradient(90deg,var(--c1,var(--r-mag)),var(--c2,var(--r-yel)));opacity:0;filter:blur(3px);transform:scaleX(.6);transform-origin:left;
+  transition:opacity 1s ease,transform 1.2s cubic-bezier(.2,.8,.2,1);transition-delay:calc(var(--d,0s) + .7s)}
+.rd.lift::before{opacity:.55;transform:none}
+.rd::after{content:'';position:absolute;left:-.08em;right:-.08em;top:.08em;bottom:.02em;background:var(--ink);border-radius:2px;
+  transform-origin:right center;transition:transform 1.1s cubic-bezier(.77,0,.18,1);transition-delay:var(--d,0s)}
+.rd.lift::after{transform:scaleX(0)}
+.rd-soft::before{height:.32em}
+
+/* ── 공통 섹션 ── */
+.sec{padding:clamp(72px,10vw,136px) var(--gut);position:relative}
+.sec-h{display:grid;grid-template-columns:auto 1fr;align-items:baseline;gap:18px;border-top:1.5px solid var(--ink);padding-top:12px;margin-bottom:clamp(40px,6vw,80px)}
+.sec-h .no{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em}
+.sec-h h2{font-family:var(--serif);font-weight:700;font-size:clamp(.95rem,1.3vw,1.05rem);letter-spacing:.02em;display:flex;justify-content:space-between;gap:12px}
+.sec-h h2 span{font-family:var(--mono);font-weight:400;font-size:.68rem;letter-spacing:.14em;color:var(--ink-soft)}
+.fade{opacity:0;transform:translateY(22px);transition:opacity .9s ease,transform .9s cubic-bezier(.2,.8,.2,1)}
+.fade.in{opacity:1;transform:none}
+
+/* ── 2. 지워진 이름들 ── */
+.names{background:var(--ink);color:var(--paper-hi);overflow:hidden}
+.names .sec-h{border-color:var(--paper-hi)}
+.names .sec-h h2 span{color:rgba(245,234,210,.55)}
+.names-wrap{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(32px,6vw,96px);align-items:center}
+.count{font-family:var(--serif);font-weight:900;font-size:clamp(4.6rem,13vw,11rem);line-height:1;padding-bottom:.08em;letter-spacing:-.05em;font-variant-numeric:tabular-nums}
+.count-cap{margin-top:18px;font-family:var(--serif);font-size:clamp(1.1rem,1.8vw,1.4rem);line-height:1.6;max-width:22em}
+.count-cap em{font-style:normal;color:var(--r-yel)}
+.wall{display:flex;flex-wrap:wrap;gap:9px 8px;align-content:flex-start;max-height:min(62vh,540px);overflow:hidden;
+  -webkit-mask-image:linear-gradient(180deg,#000 70%,transparent);mask-image:linear-gradient(180deg,#000 70%,transparent)}
+.wall i{display:block;height:15px;border-radius:2px;background:#2E281F;transition:background .7s ease,filter .7s ease,border-radius .7s ease}
+.wall i.bloom{box-shadow:0 0 12px -2px currentColor}
+.names-note{margin-top:28px;color:rgba(245,234,210,.62);font-size:.9rem}
+
+/* ── 3. 선언 ── */
+.decl-grid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:clamp(32px,6vw,110px)}
+.decl{font-family:var(--serif);font-weight:500;font-size:clamp(1.55rem,3.3vw,2.75rem);line-height:1.5;letter-spacing:-.03em}
+.decl strong{font-weight:900}
+.side{font-size:1rem;color:var(--ink-2);border-left:1.5px solid var(--ink);padding-left:22px;align-self:end}
+.side p+p{margin-top:1em}
+.articles{margin-top:clamp(56px,8vw,110px);display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--ink)}
+.art{padding:26px 26px 30px 0;border-right:1px solid var(--rule);position:relative}
+.art+.art{padding-left:26px}
+.art:last-child{border-right:0}
+.art .mono{color:var(--ink-soft)}
+.art h3{font-family:var(--serif);font-weight:700;font-size:clamp(1.25rem,2vw,1.6rem);line-height:1.35;margin-top:14px;letter-spacing:-.02em}
+.art .ink-dot{position:absolute;right:18px;top:22px;width:14px;height:14px;border-radius:50%}
+
+/* ── 4. 연표 ── */
+.ledger{list-style:none;border-top:1px solid var(--ink)}
+.ledger li{display:grid;grid-template-columns:minmax(120px,.7fr) 88px minmax(0,2fr);gap:clamp(14px,3vw,40px);align-items:baseline;padding:26px 0;border-bottom:1px solid var(--rule);transition:background .3s}
+.ledger li:hover{background:rgba(245,234,210,.55)}
+.yr{font-family:var(--serif);font-weight:900;font-size:clamp(1.7rem,3.6vw,3rem);letter-spacing:-.04em;line-height:1}
+.stamp{justify-self:start;font-family:var(--serif);font-weight:700;font-size:.8rem;border:1.5px solid currentColor;border-radius:50%;width:58px;height:58px;display:grid;place-items:center;transform:rotate(-12deg);color:var(--ink-2)}
+.ledger li:last-child .stamp{color:var(--r-mag);transform:rotate(8deg)}
+.ev h3{font-family:var(--serif);font-weight:700;font-size:clamp(1.1rem,1.7vw,1.35rem);letter-spacing:-.02em}
+.ev p{color:var(--ink-2);margin-top:6px;font-size:.98rem}
+
+/* ── 5. 후원 약정서 ── */
+.pledge{background:var(--paper-hi);border:1.5px solid var(--ink);position:relative;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr)}
+.pledge::before{content:'';position:absolute;inset:6px;border:1px solid var(--rule);pointer-events:none}
+.pl-l{padding:clamp(28px,5vw,64px);border-right:1px solid var(--rule)}
+.pl-r{padding:clamp(28px,5vw,64px);display:flex;flex-direction:column;justify-content:space-between;gap:36px;position:relative;overflow:hidden}
+.pl-title{font-family:var(--serif);font-weight:900;font-size:clamp(2.1rem,5vw,4rem);line-height:1.08;letter-spacing:-.05em}
+.pl-sub{margin-top:14px;font-family:var(--serif);font-size:clamp(1.05rem,1.6vw,1.25rem);color:var(--ink-2)}
+.field{display:grid;grid-template-columns:7.5em 1fr;gap:14px;padding:16px 0;border-bottom:1px dashed var(--rule);align-items:baseline}
+.field:first-of-type{margin-top:34px;border-top:1px solid var(--ink)}
+.field dt{font-family:var(--sans);font-weight:600;font-size:.78rem;letter-spacing:.02em;color:var(--ink-soft);text-transform:uppercase}
+.field dd{font-size:1rem}
+.field dd b{font-family:var(--serif);font-weight:700;font-size:1.12rem}
+.box{display:inline-block;width:.9em;height:.9em;border:1.5px solid var(--ink);margin-right:.45em;vertical-align:-.08em;position:relative}
+.box.on::after{content:'';position:absolute;left:.18em;top:-.18em;width:.35em;height:.75em;border:solid var(--r-mag);border-width:0 3px 3px 0;transform:rotate(40deg)}
+.tag{font-family:var(--sans);font-weight:600;font-size:.68rem;letter-spacing:0;border:1px solid var(--rule);padding:2px 7px;border-radius:99px;margin-left:6px;color:var(--ink-soft);vertical-align:2px}
+.use h4{font-family:var(--sans);font-weight:600;font-size:.8rem;letter-spacing:.02em;color:var(--ink-soft);margin-bottom:12px}
+.use ol{list-style:none;counter-reset:u}
+.use li{counter-increment:u;display:grid;grid-template-columns:1.8em 1fr;padding:9px 0;border-bottom:1px solid var(--rule);font-size:.95rem}
+.use li::before{content:counter(u);font-family:var(--serif);font-weight:900}
+.use li b{font-weight:700}
+.use li span{display:block;color:var(--ink-soft);font-size:.86rem;line-height:1.6}
+.seal{align-self:flex-start;width:clamp(150px,17vw,188px);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;text-align:center;text-decoration:none;
+  background:var(--ink);color:var(--paper-hi);font-family:var(--serif);font-weight:900;font-size:clamp(1.25rem,2vw,1.5rem);line-height:1.2;letter-spacing:-.02em;
+  box-shadow:0 0 0 6px var(--paper-hi),0 0 0 7.5px var(--ink);transform:rotate(-8deg);transition:transform .25s cubic-bezier(.3,1.6,.5,1),background .3s;position:relative}
+.seal small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.16em;margin-top:8px;opacity:.7}
+.seal:hover{transform:rotate(-2deg) scale(.95);background:var(--r-mag)}
+.seal:active{transform:rotate(0) scale(.9)}
+.pl-note{font-size:.85rem;color:var(--ink-soft)}
+
+/* ── 6. 지난 일정 · 준비 중 ── */
+.two{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border-top:1px solid var(--ink)}
+.card{padding:28px 28px 34px 0;border-right:1px solid var(--rule);text-decoration:none;display:flex;flex-direction:column;gap:12px;min-height:280px;position:relative}
+.card+.card{padding-left:28px}
+.card:last-child{border-right:0}
+.card .state{font-family:var(--sans);font-weight:600;font-size:.78rem;letter-spacing:.02em;display:inline-flex;align-items:center;gap:8px;color:var(--ink-soft)}
+.card .state::before{content:'';width:8px;height:8px;border-radius:50%;background:currentColor}
+.card .state.past{color:var(--ink-soft)}
+.card .state.prep{color:var(--r-org)}
+.card h3{font-family:var(--serif);font-weight:900;font-size:clamp(1.6rem,2.6vw,2.2rem);line-height:1.15;letter-spacing:-.04em}
+.card p{color:var(--ink-2);font-size:.95rem}
+.card .go{margin-top:auto;font-weight:700;font-size:.9rem;display:inline-flex;gap:.5em;align-items:center}
+.card .go::after{content:'→';transition:transform .25s}
+a.card:hover .go::after{transform:translateX(6px)}
+a.card:hover h3{text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:6px;text-decoration-color:var(--r-blu)}
+.date-big{font-family:var(--serif);font-weight:900;font-size:clamp(3rem,6vw,4.8rem);line-height:.9;letter-spacing:-.05em;color:transparent;-webkit-text-stroke:1.5px var(--ink)}
+
+/* ── 7. 맺음 ── */
+.close{padding:clamp(90px,14vw,190px) var(--gut) 40px;text-align:center;position:relative}
+.close-line{font-family:var(--serif);font-weight:900;font-size:clamp(2.3rem,7.2vw,6.4rem);line-height:1.1;letter-spacing:-.05em}
+.close-line .soft{font-weight:300}
+.wave{width:min(760px,90%);margin:26px auto 0;height:auto;overflow:visible}
+.wave path{fill:none;stroke-linecap:round}
+.wave .glow{stroke:url(#rb);stroke-width:16;opacity:.55;filter:url(#blur)}
+.wave .line{stroke:var(--ink);stroke-width:4.5}
+.wave .draw{stroke-dasharray:1200;stroke-dashoffset:1200;transition:stroke-dashoffset 2.4s cubic-bezier(.6,0,.2,1)}
+.wave.in .draw{stroke-dashoffset:0}
+.close .btns{justify-content:center;margin-top:42px}
+footer{padding:28px var(--gut) 36px;border-top:1.5px solid var(--ink);margin:0 var(--gut);padding-left:0;padding-right:0;display:grid;grid-template-columns:1fr auto;gap:18px;font-size:.85rem;color:var(--ink-2)}
+footer nav{display:flex;gap:20px;flex-wrap:wrap}
+footer a{text-decoration:none}
+footer a:hover{text-decoration:underline}
+
+/* ── 반응형 ── */
+@media (max-width:980px){
+  .menu li.hide-m{display:none}
+  .hero-stage{grid-template-columns:1fr;gap:0}
+  .hero-film{width:118%;margin:0 -9%;order:-1}
+  .names-wrap,.decl-grid{grid-template-columns:1fr}
+  .articles,.two{grid-template-columns:1fr}
+  .art,.card{border-right:0;border-bottom:1px solid var(--rule);padding:22px 0!important}
+  .card{min-height:0}
+  .pledge{grid-template-columns:1fr}
+  .pl-l{border-right:0;border-bottom:1px solid var(--rule)}
+  .ledger li{grid-template-columns:auto 1fr;grid-template-areas:"y s" "e e"}
+  .yr{grid-area:y}.stamp{grid-area:s;justify-self:end;width:50px;height:50px;font-size:.72rem}.ev{grid-area:e}
+}
+@media (max-width:560px){
+  html{font-size:16px}
+  .fs{display:none}
+  .logo small{display:none}
+  .docline .mono:last-child{display:none}
+  .hero{padding-top:70px}
+  .big{font-size:clamp(5.4rem,30vw,8rem)}
+  .btn{flex:1;justify-content:center}
+  .field{grid-template-columns:1fr;gap:4px}
+  .wall i{height:12px}
+  footer{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+  .rd::after{transform:scaleX(0)}
+  .fade{opacity:1;transform:none}
+  .wave .draw{stroke-dashoffset:0}
+}
+</style>
+</head>
+<body>
+
+<header class="top" id="top">
+  <a class="logo" href="index_v9.html">블랙리스트 이후 <small>POST BLACKLIST</small></a>
+  <ul class="menu">
+    <li class="hide-m"><a href="#declaration">소개</a></li>
+    <li class="hide-m"><a href="#ledger">활동</a></li>
+    <li class="hide-m"><a href="archive.html">아카이빙</a></li>
+    <li class="hide-m"><a href="essays.html">기고글</a></li>
+    <li class="hide-m"><a href="support.html">후원 안내</a></li>
+    <li class="fs hide-m" aria-label="글자 크기"><button type="button" onclick="fs(1)" aria-label="글자 크게">A+</button><button type="button" onclick="fs(-1)" aria-label="글자 작게">A−</button></li>
+    <li><a class="seal-sm" href="https://ap.hyosungcmsplus.co.kr/external/shorten/20240429Lu6nfSbAyh" target="_blank" rel="noopener">후원하기</a></li>
+  </ul>
+</header>
+
+<!-- 1. 첫 화면 -->
+<section class="hero">
+  <div class="docline"><span class="mono">문화예술계 지원배제 명단 · 9,473</span><span class="mono">2017 — NOW</span></div>
+
+  <div class="hero-stage">
+    <div class="hero-film" aria-hidden="true">
+      <video id="film" autoplay muted loop playsinline preload="metadata" poster="media/ink-wisps-poster.jpg">
+        <source src="media/ink-wisps.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="hero-copy">
+      <h1 class="big" aria-label="이후"><span class="strike">이후</span><sup>AFTER</sup></h1>
+      <p class="lede">
+        <span class="rd" style="--d:.5s;--c1:var(--r-mag);--c2:var(--r-org)">9473명</span>의 이름이<br>
+        <span class="rd" style="--d:.9s;--c1:var(--r-yel);--c2:var(--r-grn)">지워진</span> 자리에서<br>
+        우리는 <span class="rd" style="--d:1.3s;--c1:var(--r-blu);--c2:var(--r-vio)">계속 만들어간다</span>
+      </p>
+    </div>
+  </div>
+
+  <div class="hero-foot">
+    <p class="motto"><b>끝까지 싸워라,</b> <i>사랑스럽고 다정하게.</i></p>
+    <div class="btns">
+      <a class="btn btn-ink" href="#pledge">후원으로 함께하기</a>
+      <a class="btn btn-line" href="#declaration">블랙리스트 이후는</a>
+    </div>
+  </div>
+</section>
+
+<!-- 2. 지워진 이름들 -->
+<section class="sec names" id="names">
+  <div class="sec-h"><span class="no">01</span><h2>지워진 이름들 <span>THE ERASED</span></h2></div>
+  <div class="names-wrap">
+    <div class="fade">
+      <div class="count" id="count" data-to="9473">0</div>
+      <p class="count-cap">명단에 올라, 지원에서 <em>배제된</em> 예술인의 수.<br>우리는 이 숫자를 기억하는 것에서 시작했습니다.</p>
+      <p class="names-note">검은 막대 하나가 한 사람의 이름입니다. 화면을 내리면 이름이 색을 되찾습니다.</p>
+    </div>
+    <div class="wall" id="wall" aria-hidden="true"></div>
+  </div>
+</section>
+
+<!-- 3. 선언 -->
+<section class="sec" id="declaration">
+  <div class="sec-h"><span class="no">02</span><h2>선언 <span>ABOUT</span></h2></div>
+  <div class="decl-grid">
+    <p class="decl fade">
+      <strong>블랙리스트는 끝나지 않았습니다.</strong>
+      9473명의 예술인이 지워진 이후에도 새로운 형태의 <span class="rd rd-soft">검열</span>은 계속됩니다.
+    </p>
+    <div class="side fade">
+      <p>블랙리스트 이후는 그 기록을 추적하고, 제도를 바꾸고, 다시는 반복되지 않는 세상을 만들어가는 <b>민간 전문 기구</b>입니다.</p>
+      <p>정부 지원금을 받지 않는 독립 기구로, 여러분의 후원으로 움직입니다.</p>
+    </div>
+  </div>
+
+  <div class="articles">
+    <div class="art fade"><span class="ink-dot" style="background:var(--r-mag)"></span><span class="mono">제1항</span><h3>법 · 제도 · 정책<br>구조 개혁</h3></div>
+    <div class="art fade"><span class="ink-dot" style="background:var(--r-yel)"></span><span class="mono">제2항</span><h3>미결 진상조사<br>· 기록</h3></div>
+    <div class="art fade"><span class="ink-dot" style="background:var(--r-blu)"></span><span class="mono">제3항</span><h3>피해자 회복<br>· 연대</h3></div>
+  </div>
+</section>
+
+<!-- 4. 연표 -->
+<section class="sec" id="ledger" style="padding-top:0">
+  <div class="sec-h"><span class="no">03</span><h2>걸어온 길 <span>TIMELINE</span></h2></div>
+  <ol class="ledger">
+    <li class="fade"><span class="yr">2017</span><span class="stamp">발족</span><div class="ev"><h3>블랙리스트 이후 출범</h3><p>문화예술계 블랙리스트 피해 예술인들의 대응·연대 조직. 9473명의 이름을 기억하는 것에서 시작.</p></div></li>
+    <li class="fade"><span class="yr">2018–20</span><span class="stamp">대응</span><div class="ev"><h3>진상조사 · 법적 대응</h3><p>피해 예술인 사례 수집 및 법적 지원. 가해자 복귀 현황 모니터링.</p></div></li>
+    <li class="fade"><span class="yr">2021–23</span><span class="stamp">개혁</span><div class="ev"><h3>제도 개혁 · 입법 활동</h3><p>예술인권리보장법 개정 추진. 재발 방지 시스템 마련 요구.</p></div></li>
+    <li class="fade"><span class="yr">2024–25</span><span class="stamp">입법</span><div class="ev"><h3>예술인권리보장법 전면 개정</h3><p>법 전면 개정 추진 참여. 피해자 회복 지원 체계 논의.</p></div></li>
+    <li class="fade"><span class="yr">2026</span><span class="stamp">지금</span><div class="ev"><h3>지금도, 이후에도</h3><p>블랙리스트가 끝난 게 아니라, 이후를 만들어가는 중입니다.</p></div></li>
+  </ol>
+</section>
+
+<!-- 5. 후원 약정서 -->
+<section class="sec" id="pledge" style="padding-top:0">
+  <div class="sec-h"><span class="no">04</span><h2>후원 약정서 <span>SUPPORT</span></h2></div>
+  <div class="pledge fade">
+    <div class="pl-l">
+      <h3 class="pl-title">함께<br>이어서,<br>계속됩니다</h3>
+      <p class="pl-sub">사랑스럽고 다정하게, 끝까지. 여러분의 후원으로 이어집니다.</p>
+      <dl>
+        <div class="field"><dt>정기 후원</dt><dd><span class="box on"></span><b>효성 CMS 자동이체</b><span class="tag">가능</span><br><span style="color:var(--ink-soft);font-size:.9rem">월 1만원부터 자유 설정 · 매월 자동 출금 · 언제든 변경·해지</span></dd></div>
+        <div class="field"><dt>일시 후원</dt><dd><span class="box"></span><b>계좌이체</b><span class="tag">준비 중</span><br><span style="color:var(--ink-soft);font-size:.9rem">계좌가 확정되는 대로 안내합니다</span></dd></div>
+        <div class="field"><dt>기부금 영수증</dt><dd><span class="tag" style="margin-left:0">준비 중</span></dd></div>
+        <div class="field"><dt>문의</dt><dd><a href="https://www.instagram.com/post_blacklist" target="_blank" rel="noopener">인스타그램 DM @post_blacklist</a></dd></div>
+      </dl>
+    </div>
+    <div class="pl-r">
+      <div class="use">
+        <h4>후원금은 이렇게 쓰입니다</h4>
+        <ol>
+          <li><div><b>진상조사 · 기록</b><span>피해 사례 수집, 가해자 복귀 모니터링, 미결 사건 추적</span></div></li>
+          <li><div><b>법 · 제도 개혁</b><span>예술인권리보장법 개정 활동, 재발 방지 시스템 구축</span></div></li>
+          <li><div><b>피해자 회복 · 연대</b><span>피해 예술인 지원, 연대 행사, 국제 네트워크 구축</span></div></li>
+          <li><div><b>운영</b><span>조직 운영, 홈페이지 유지, 홍보 활동</span></div></li>
+        </ol>
+      </div>
+      <a class="seal" href="https://ap.hyosungcmsplus.co.kr/external/shorten/20240429Lu6nfSbAyh" target="_blank" rel="noopener">정기 후원<br>약정하기<small>HYOSUNG CMS</small></a>
+      <p class="pl-note">도장을 누르면 효성 CMS 신청 화면으로 이동합니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 6. 지난 일정 · 준비 중 -->
+<section class="sec" id="more" style="padding-top:0">
+  <div class="sec-h"><span class="no">05</span><h2>기록 · 목소리 · 모임 <span>ARCHIVE</span></h2></div>
+  <div class="two">
+    <a class="card fade" href="archive.html">
+      <span class="state prep">준비 중</span>
+      <h3>검열<br>아카이빙</h3>
+      <p>기억하지 않으면 반복됩니다. 검열의 기록을 모으고, 공유하고, 남깁니다. 사례 신고 양식을 준비하고 있습니다.</p>
+      <span class="go">아카이빙 소개</span>
+    </a>
+    <a class="card fade" href="essays.html">
+      <span class="state prep">준비 중</span>
+      <h3>예술인<br>기고글</h3>
+      <p>예술인 한 사람 한 사람의 목소리. 첫 번째 기고글을 준비하고 있습니다.</p>
+      <span class="go">기고글 소개</span>
+    </a>
+    <a class="card fade" href="party.html">
+      <span class="state past">지난 일정</span>
+      <div class="date-big">04·25</div>
+      <p>2026년 4월 25일(토), 블랙리스트 이후 후원 파티. 모이고, 나누고, 이어가는 밤.</p>
+      <span class="go">파티 페이지</span>
+    </a>
+  </div>
+</section>
+
+<!-- 7. 맺음 -->
+<section class="close">
+  <p class="close-line fade">끝까지 싸워라,<br><span class="soft">사랑스럽고 다정하게.</span></p>
+  <svg class="wave" id="wave" viewBox="0 0 760 120" aria-hidden="true">
+    <defs>
+      <linearGradient id="rb" x1="0" x2="1"><stop offset="0" stop-color="#F4C92B"/><stop offset=".35" stop-color="#4DB33D"/><stop offset=".65" stop-color="#E4247A"/><stop offset="1" stop-color="#1B9AD6"/></linearGradient>
+      <filter id="blur" x="-10%" y="-60%" width="120%" height="220%"><feGaussianBlur stdDeviation="5"/></filter>
+    </defs>
+    <path class="glow draw" d="M20 70 C 120 10, 200 10, 290 60 S 470 115, 560 55 S 690 25, 730 62"/>
+    <path class="line draw" d="M20 70 C 120 10, 200 10, 290 60 S 470 115, 560 55 S 690 25, 730 62"/>
+    <path class="line draw" d="M708 44 L 733 63 L 704 74"/>
+  </svg>
+  <div class="btns">
+    <a class="btn btn-ink" href="https://ap.hyosungcmsplus.co.kr/external/shorten/20240429Lu6nfSbAyh" target="_blank" rel="noopener">정기 후원하기</a>
+    <a class="btn btn-line" href="https://www.instagram.com/post_blacklist" target="_blank" rel="noopener">인스타그램</a>
+    <a class="btn btn-line" href="https://www.facebook.com/profile.php?id=100089032202148" target="_blank" rel="noopener">페이스북</a>
+  </div>
+</section>
+
+<footer>
+  <div><b style="font-family:var(--serif)">블랙리스트 이후</b> · 표현의 자유를 위한 민간 전문 기구 · 2017 — NOW</div>
+  <nav><a href="archive.html">아카이빙</a><a href="essays.html">기고글</a><a href="party.html">후원파티</a><a href="support.html">후원 안내</a></nav>
+</footer>
+
+<script>
+// 상단 바
+const top_=document.getElementById('top');
+addEventListener('scroll',()=>top_.classList.toggle('on',scrollY>40),{passive:true});
+
+// 글자 크기 (어르신 가독성)
+let base=17;function fs(d){base=Math.max(15,Math.min(23,base+d*2));document.documentElement.style.fontSize=base+'px'}
+
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// 첫 화면 먹칠 걷기
+requestAnimationFrame(()=>setTimeout(()=>document.querySelectorAll('.hero .rd').forEach(e=>e.classList.add('lift')),200));
+
+// 스크롤 등장
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;const t=e.target;
+  t.classList.add('in');t.querySelectorAll('.rd').forEach(r=>r.classList.add('lift'));io.unobserve(t)}),{threshold:.18,rootMargin:'0px 0px -8% 0px'});
+document.querySelectorAll('.fade,#wave').forEach(el=>io.observe(el));
+
+// 지워진 이름의 벽
+const wall=document.getElementById('wall');
+const hues=['#E4247A','#F47B20','#F4C92B','#4DB33D','#1B9AD6','#7B4BB3'];
+const N=innerWidth<560?150:260;const bars=[];
+for(let i=0;i<N;i++){const b=document.createElement('i');b.style.width=(38+Math.random()*92|0)+'px';wall.appendChild(b);bars.push(b)}
+// 무작위 순서로 색을 되찾음
+const order=bars.map((_,i)=>i).sort(()=>Math.random()-.5);
+let shown=0;
+function bloomTo(r){const target=Math.floor(order.length*r);if(shown>=target)return;
+  for(;shown<target;shown++){const b=bars[order[shown]];
+    const c=hues[order[shown]%6];
+    b.style.background=c;b.style.color=c;b.classList.add('bloom')}}
+const names=document.getElementById('names');
+function onScroll(){const r=names.getBoundingClientRect();const p=Math.min(1,Math.max(0,(innerHeight-r.top)/(r.height+innerHeight*.2)));bloomTo(reduce?.5:p*.5)}
+addEventListener('scroll',onScroll,{passive:true});onScroll();
+
+// 숫자
+const cnt=document.getElementById('count');
+new IntersectionObserver((es,o)=>es.forEach(e=>{if(!e.isIntersecting)return;o.disconnect();const to=+cnt.dataset.to;
+  if(reduce){cnt.textContent=to.toLocaleString();return}const t0=performance.now();
+  (function f(t){const k=Math.min(1,(t-t0)/1800);cnt.textContent=Math.round(to*(1-Math.pow(1-k,4))).toLocaleString();if(k<1)requestAnimationFrame(f)})(t0)}),{threshold:.5}).observe(cnt);
+
+// 움직임 줄이기 설정이면 영상 정지
+if(reduce){const v=document.getElementById('film');v.removeAttribute('autoplay');v.pause()}
+</script>
+</body>
+</html>
